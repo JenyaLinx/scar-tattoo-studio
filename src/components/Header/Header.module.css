@@ -1,0 +1,245 @@
+.header {
+  position: relative;
+  z-index: 100;
+  width: 100%;
+}
+
+.container {
+  position: relative;
+  z-index: 102;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+}
+
+.logoMain {
+  font-family: var(--font-heading);
+  font-size: 29px;
+  font-weight: 600;
+  line-height: 0.8;
+  letter-spacing: 0.08em;
+}
+
+.logoSmall {
+  margin-top: 7px;
+  font-size: 7px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.28em;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menuButton {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  box-shadow: var(--shadow-small);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.menuButton:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.menuButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.menuLine {
+  display: block;
+  width: 16px;
+  height: 1px;
+  background-color: currentColor;
+  transition:
+    transform var(--transition-default),
+    opacity var(--transition-default);
+}
+
+.menuButtonOpen .menuLine:first-child {
+  transform: translateY(3.5px) rotate(45deg);
+}
+
+.menuButtonOpen .menuLine:last-child {
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+.menuOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 101;
+  overflow-y: auto;
+  background-color: var(--color-background);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-14px);
+  transition:
+    opacity var(--transition-default),
+    visibility var(--transition-default),
+    transform var(--transition-default);
+}
+
+.menuOverlayOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 128px 20px 30px;
+}
+
+.navigationList {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--color-border);
+}
+
+.navigationItem {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--transition-default),
+    transform var(--transition-default);
+  transition-delay: 0ms;
+}
+
+.menuOverlayOpen .navigationItem {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: var(--navigation-delay);
+}
+
+.navigationLink {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 69px;
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-heading);
+  font-size: 31px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  transition:
+    color var(--transition-fast),
+    padding-left var(--transition-fast);
+}
+
+.navigationLink:hover {
+  padding-left: 6px;
+  color: var(--color-accent);
+}
+
+.navigationNumber {
+  width: 22px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.bookingLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  margin-top: 30px;
+  padding: 14px 24px;
+  border-radius: 4px;
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+  font-size: 13px;
+  font-weight: 600;
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.bookingLink:hover {
+  background-color: var(--color-accent-hover);
+  transform: translateY(-2px);
+}
+
+.bookingLink:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.menuFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: auto;
+  padding-top: 56px;
+}
+
+.menuFooterText {
+  max-width: 270px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.socialLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.socialLinks a {
+  color: var(--color-text-secondary);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color var(--transition-fast);
+}
+
+.socialLinks a:hover {
+  color: var(--color-accent);
+}
+
+.socialLinks a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+@media screen and (min-width: 480px) {
+  .navigation {
+    padding-right: 32px;
+    padding-left: 32px;
+  }
+}

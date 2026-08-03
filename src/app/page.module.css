@@ -4,41 +4,11 @@
   padding: 20px;
 }
 
-.topBar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.logo {
-  display: flex;
-  flex-direction: column;
-  width: fit-content;
-  text-transform: uppercase;
-}
-
-.logoMain {
-  font-family: var(--font-heading);
-  font-size: 29px;
-  font-weight: 600;
-  line-height: 0.8;
-  letter-spacing: 0.08em;
-}
-
-.logoSmall {
-  margin-top: 7px;
-  font-size: 7px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0.28em;
-}
-
 .hero {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: calc(100vh - 82px);
+  min-height: calc(100svh - 82px);
   padding: 70px 0 48px;
 }
 
@@ -123,10 +93,5 @@
 
   .actions {
     flex-direction: row;
-  }
-
-  .primaryButton,
-  .secondaryButton {
-    width: auto;
   }
 }

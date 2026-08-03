@@ -1,17 +1,10 @@
-import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
+import Header from "@/components/Header/Header";
 import styles from "./page.module.css";
 
 export default function HomePage() {
   return (
     <main className={styles.page}>
-      <div className={styles.topBar}>
-        <div className={styles.logo}>
-          <span className={styles.logoMain}>SCAR</span>
-          <span className={styles.logoSmall}>Tattoo Studio</span>
-        </div>
-
-        <ThemeToggle />
-      </div>
+      <Header />
 
       <section className={styles.hero}>
         <p className={styles.eyebrow}>Professional tattoo studio</p>

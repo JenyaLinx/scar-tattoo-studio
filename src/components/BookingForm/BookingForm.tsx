@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
 import { artists } from "@/data/artists";
 import {
@@ -50,7 +50,7 @@ export default function BookingForm({
     register,
     handleSubmit,
     reset,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
@@ -63,12 +63,14 @@ export default function BookingForm({
     },
   });
 
-  const message = watch("message");
+  const message =
+    useWatch({
+      control,
+      name: "message",
+    }) ?? "";
 
   const onSubmit = async (values: BookingFormValues) => {
     try {
-      // Тимчасово перевіряємо готові дані в консолі.
-      // Пізніше тут буде запит до нашого server route.
       console.log("Booking request:", values);
 
       await new Promise((resolve) => {
@@ -108,9 +110,7 @@ export default function BookingForm({
             }`}
             id="artist"
             aria-invalid={Boolean(errors.artist)}
-            aria-describedby={
-              errors.artist ? "artist-error" : undefined
-            }
+            aria-describedby={errors.artist ? "artist-error" : undefined}
             {...register("artist")}
           >
             <option value="">Select an artist</option>

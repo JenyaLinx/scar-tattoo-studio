@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import AppToaster from "@/components/AppToaster/AppToaster";
+import QueryProvider from "@/components/QueryProvider/QueryProvider";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -49,14 +50,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${cormorant.variable} ${manrope.variable}`}>
-        {children}
-        <AppToaster />
+        <QueryProvider>
+          {children}
+          <AppToaster />
+        </QueryProvider>
       </body>
 
       <Script
         id="theme-script"
         strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{ __html: themeScript }}
+        dangerouslySetInnerHTML={{
+          __html: themeScript,
+        }}
       />
     </html>
   );

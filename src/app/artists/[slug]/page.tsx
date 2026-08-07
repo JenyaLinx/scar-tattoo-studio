@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header/Header";
 import ReviewForm from "@/components/ReviewForm/ReviewForm";
-import { artists, getArtistBySlug } from "@/data/artists";
+import { getArtistBySlug } from "@/lib/queries/artists";
 import { getReviewsByArtistId } from "@/data/reviews";
 import styles from "./page.module.css";
 
@@ -14,17 +14,11 @@ type ArtistPageProps = {
   }>;
 };
 
-export function generateStaticParams() {
-  return artists.map((artist) => ({
-    slug: artist.slug,
-  }));
-}
-
 export async function generateMetadata({
   params,
 }: ArtistPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const artist = getArtistBySlug(slug);
+  const artist = await getArtistBySlug(slug);
 
   if (!artist) {
     return {
@@ -34,24 +28,33 @@ export async function generateMetadata({
 
   return {
     title: `${artist.name} | SCAR Tattoo Studio`,
-    description: artist.description,
+    description:
+      artist.description ??
+      `${artist.name} at SCAR Tattoo Studio`,
   };
 }
 
-export default async function ArtistPage({ params }: ArtistPageProps) {
+export default async function ArtistPage({
+  params,
+}: ArtistPageProps) {
   const { slug } = await params;
-  const artist = getArtistBySlug(slug);
+
+  const artist = await getArtistBySlug(slug);
 
   if (!artist) {
     notFound();
   }
 
-  const artistReviews = getReviewsByArtistId(artist.id);
+  // Reviews are still temporary.
+  // We will move them to Supabase next.
+  const artistReviews =
+    getReviewsByArtistId(artist.id);
 
   const averageRating =
     artistReviews.length > 0
       ? artistReviews.reduce(
-          (total, review) => total + review.rating,
+          (total, review) =>
+            total + review.rating,
           0,
         ) / artistReviews.length
       : 0;
@@ -62,14 +65,16 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
 
       <section className={styles.profile}>
         <div className={styles.imageWrapper}>
-          <Image
-            className={styles.image}
-            src={artist.image}
-            alt={`${artist.name}, ${artist.specialty} tattoo artist`}
-            fill
-            priority
-            sizes="(max-width: 767px) 100vw, 50vw"
-          />
+          {artist.image_url && (
+            <Image
+              className={styles.image}
+              src={artist.image_url}
+              alt={`${artist.name}, ${artist.specialty} tattoo artist`}
+              fill
+              priority
+              sizes="(max-width: 767px) 100vw, 50vw"
+            />
+          )}
 
           <div className={styles.overlay} />
 
@@ -79,13 +84,25 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
         </div>
 
         <div className={styles.content}>
-          <p className={styles.specialty}>{artist.specialty} artist</p>
+          <p className={styles.specialty}>
+            {artist.specialty} artist
+          </p>
 
-          <h1 className={styles.name}>{artist.name}</h1>
+          <h1 className={styles.name}>
+            {artist.name}
+          </h1>
 
-          <p className={styles.experience}>{artist.experience}</p>
+          {artist.experience && (
+            <p className={styles.experience}>
+              {artist.experience}
+            </p>
+          )}
 
-          <p className={styles.biography}>{artist.biography}</p>
+          {artist.biography && (
+            <p className={styles.biography}>
+              {artist.biography}
+            </p>
+          )}
 
           <div className={styles.actions}>
             <Link
@@ -95,35 +112,44 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
               Book consultation
             </Link>
 
-            <Link className={styles.secondaryButton} href="/artists">
+            <Link
+              className={styles.secondaryButton}
+              href="/artists"
+            >
               All artists
             </Link>
           </div>
 
           <div className={styles.socials}>
-            <a
-              href={artist.instagram}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Instagram
-            </a>
+            {artist.instagram_url && (
+              <a
+                href={artist.instagram_url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Instagram
+              </a>
+            )}
 
-            <a
-              href={artist.tiktok}
-              target="_blank"
-              rel="noreferrer"
-            >
-              TikTok
-            </a>
+            {artist.tiktok_url && (
+              <a
+                href={artist.tiktok_url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                TikTok
+              </a>
+            )}
 
-            <a
-              href={artist.facebook}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Facebook
-            </a>
+            {artist.facebook_url && (
+              <a
+                href={artist.facebook_url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Facebook
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -131,27 +157,40 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
       <section className={styles.portfolio}>
         <div className={styles.portfolioHeading}>
           <div>
-            <p className={styles.portfolioEyebrow}>Selected work</p>
-            <h2 className={styles.portfolioTitle}>Artist portfolio</h2>
+            <p className={styles.portfolioEyebrow}>
+              Selected work
+            </p>
+
+            <h2 className={styles.portfolioTitle}>
+              Artist portfolio
+            </h2>
           </div>
 
           <p className={styles.portfolioDescription}>
-            A selection of custom work created by {artist.name}.
+            A selection of custom work created by{" "}
+            {artist.name}.
           </p>
         </div>
 
         <div className={styles.gallery}>
-          {artist.portfolio.map((image, index) => (
-            <div className={styles.galleryItem} key={image}>
-              <Image
-                className={styles.galleryImage}
-                src={image}
-                alt={`${artist.name} tattoo work ${index + 1}`}
-                fill
-                sizes="(max-width: 767px) 100vw, 50vw"
-              />
-            </div>
-          ))}
+          {artist.artist_images.map(
+            (portfolioImage, index) => (
+              <div
+                className={styles.galleryItem}
+                key={portfolioImage.id}
+              >
+                <Image
+                  className={styles.galleryImage}
+                  src={portfolioImage.image_url}
+                  alt={`${artist.name} tattoo work ${
+                    index + 1
+                  }`}
+                  fill
+                  sizes="(max-width: 767px) 100vw, 50vw"
+                />
+              </div>
+            ),
+          )}
         </div>
 
         <Link
@@ -166,7 +205,9 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
       <section className={styles.reviews}>
         <div className={styles.reviewsHeading}>
           <div>
-            <p className={styles.portfolioEyebrow}>Client reviews</p>
+            <p className={styles.portfolioEyebrow}>
+              Client reviews
+            </p>
 
             <h2 className={styles.portfolioTitle}>
               What clients say
@@ -179,9 +220,16 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
             </span>
 
             <div>
-              <p className={styles.summaryStars} aria-label="Average rating">
-                {"★".repeat(Math.round(averageRating))}
-                {"☆".repeat(5 - Math.round(averageRating))}
+              <p
+                className={styles.summaryStars}
+                aria-label="Average rating"
+              >
+                {"★".repeat(
+                  Math.round(averageRating),
+                )}
+                {"☆".repeat(
+                  5 - Math.round(averageRating),
+                )}
               </p>
 
               <p className={styles.reviewCount}>
@@ -193,40 +241,71 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
 
         <div className={styles.reviewList}>
           {artistReviews.map((review) => (
-            <article className={styles.reviewCard} key={review.id}>
+            <article
+              className={styles.reviewCard}
+              key={review.id}
+            >
               <div className={styles.reviewTop}>
                 <div>
-                  <h3 className={styles.reviewAuthor}>{review.author}</h3>
+                  <h3
+                    className={styles.reviewAuthor}
+                  >
+                    {review.author}
+                  </h3>
+
                   <p
                     className={styles.reviewStars}
                     aria-label={`${review.rating} out of 5 stars`}
                   >
                     {"★".repeat(review.rating)}
-                    {"☆".repeat(5 - review.rating)}
+                    {"☆".repeat(
+                      5 - review.rating,
+                    )}
                   </p>
                 </div>
 
-                <time className={styles.reviewDate}>
+                <time
+                  className={styles.reviewDate}
+                >
                   {review.date}
                 </time>
               </div>
 
-              <p className={styles.reviewComment}>{review.comment}</p>
+              <p
+                className={styles.reviewComment}
+              >
+                {review.comment}
+              </p>
 
-              <p className={styles.verified}>Verified client</p>
+              <p className={styles.verified}>
+                Verified client
+              </p>
             </article>
           ))}
         </div>
 
-        <div className={styles.reviewFormWrapper}>
-          <div className={styles.reviewFormHeading}>
-            <span className={styles.formNumber}>01</span>
+        <div
+          className={styles.reviewFormWrapper}
+        >
+          <div
+            className={styles.reviewFormHeading}
+          >
+            <span className={styles.formNumber}>
+              01
+            </span>
 
             <div>
-              <h3 className={styles.formTitle}>Leave a review</h3>
+              <h3 className={styles.formTitle}>
+                Leave a review
+              </h3>
 
-              <p className={styles.formDescription}>
-                Share your experience with {artist.name}.
+              <p
+                className={
+                  styles.formDescription
+                }
+              >
+                Share your experience with{" "}
+                {artist.name}.
               </p>
             </div>
           </div>

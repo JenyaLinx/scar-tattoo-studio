@@ -2,9 +2,10 @@
 
 import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
-import { artists } from "@/data/artists";
+import { getArtistsClient } from "@/lib/queries/artistsClient";
 import {
   bookingSchema,
   type BookingFormValues,
@@ -30,6 +31,15 @@ const availableTimes = [
 export default function BookingForm({
   initialArtist = "",
 }: BookingFormProps) {
+  const {
+    data: artists = [],
+    isLoading: isArtistsLoading,
+    isError: isArtistsError,
+  } = useQuery({
+    queryKey: ["artists"],
+    queryFn: getArtistsClient,
+  });
+
   const minimumDate = useMemo(() => {
     const today = new Date();
 
@@ -40,12 +50,6 @@ export default function BookingForm({
     return `${year}-${month}-${day}`;
   }, []);
 
-  const validInitialArtist = artists.some(
-    (artist) => artist.slug === initialArtist,
-  )
-    ? initialArtist
-    : "";
-
   const {
     register,
     handleSubmit,
@@ -54,12 +58,18 @@ export default function BookingForm({
     formState: { errors, isSubmitting },
   } = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
-    defaultValues: {
-      artist: validInitialArtist,
+    values: {
+      artist:
+        artists.some((artist) => artist.slug === initialArtist)
+          ? initialArtist
+          : "",
       date: "",
       time: "",
       phone: "",
       message: "",
+    },
+    resetOptions: {
+      keepDirtyValues: true,
     },
   });
 
@@ -77,7 +87,9 @@ export default function BookingForm({
         window.setTimeout(resolve, 700);
       });
 
-      toast.success("Your consultation request has been sent.");
+      toast.success(
+        "Your consultation request has been sent.",
+      );
 
       reset({
         artist: values.artist,
@@ -87,7 +99,9 @@ export default function BookingForm({
         message: "",
       });
     } catch {
-      toast.error("Something went wrong. Please try again.");
+      toast.error(
+        "Something went wrong. Please try again.",
+      );
     }
   };
 
@@ -109,27 +123,51 @@ export default function BookingForm({
               errors.artist ? styles.controlError : ""
             }`}
             id="artist"
+            disabled={isArtistsLoading || isArtistsError}
             aria-invalid={Boolean(errors.artist)}
-            aria-describedby={errors.artist ? "artist-error" : undefined}
+            aria-describedby={
+              errors.artist ? "artist-error" : undefined
+            }
             {...register("artist")}
           >
-            <option value="">Select an artist</option>
+            <option value="">
+              {isArtistsLoading
+                ? "Loading artists..."
+                : isArtistsError
+                  ? "Unable to load artists"
+                  : "Select an artist"}
+            </option>
 
             {artists.map((artist) => (
-              <option value={artist.slug} key={artist.id}>
+              <option
+                value={artist.slug}
+                key={artist.id}
+              >
                 {artist.name} — {artist.specialty}
               </option>
             ))}
           </select>
 
-          <span className={styles.selectIcon} aria-hidden="true">
+          <span
+            className={styles.selectIcon}
+            aria-hidden="true"
+          >
             ↓
           </span>
         </div>
 
         {errors.artist && (
-          <p className={styles.error} id="artist-error">
+          <p
+            className={styles.error}
+            id="artist-error"
+          >
             {errors.artist.message}
+          </p>
+        )}
+
+        {isArtistsError && (
+          <p className={styles.error}>
+            Unable to load artists. Please refresh the page.
           </p>
         )}
       </div>
@@ -149,12 +187,17 @@ export default function BookingForm({
             type="date"
             min={minimumDate}
             aria-invalid={Boolean(errors.date)}
-            aria-describedby={errors.date ? "date-error" : undefined}
+            aria-describedby={
+              errors.date ? "date-error" : undefined
+            }
             {...register("date")}
           />
 
           {errors.date && (
-            <p className={styles.error} id="date-error">
+            <p
+              className={styles.error}
+              id="date-error"
+            >
               {errors.date.message}
             </p>
           )}
@@ -173,7 +216,9 @@ export default function BookingForm({
               }`}
               id="time"
               aria-invalid={Boolean(errors.time)}
-              aria-describedby={errors.time ? "time-error" : undefined}
+              aria-describedby={
+                errors.time ? "time-error" : undefined
+              }
               {...register("time")}
             >
               <option value="">Select time</option>
@@ -185,13 +230,19 @@ export default function BookingForm({
               ))}
             </select>
 
-            <span className={styles.selectIcon} aria-hidden="true">
+            <span
+              className={styles.selectIcon}
+              aria-hidden="true"
+            >
               ↓
             </span>
           </div>
 
           {errors.time && (
-            <p className={styles.error} id="time-error">
+            <p
+              className={styles.error}
+              id="time-error"
+            >
               {errors.time.message}
             </p>
           )}
@@ -213,12 +264,17 @@ export default function BookingForm({
           placeholder="+44 7000 000000"
           autoComplete="tel"
           aria-invalid={Boolean(errors.phone)}
-          aria-describedby={errors.phone ? "phone-error" : undefined}
+          aria-describedby={
+            errors.phone ? "phone-error" : undefined
+          }
           {...register("phone")}
         />
 
         {errors.phone && (
-          <p className={styles.error} id="phone-error">
+          <p
+            className={styles.error}
+            id="phone-error"
+          >
             {errors.phone.message}
           </p>
         )}
@@ -226,14 +282,21 @@ export default function BookingForm({
 
       <div className={styles.field}>
         <div className={styles.labelRow}>
-          <label className={styles.label} htmlFor="message">
+          <label
+            className={styles.label}
+            htmlFor="message"
+          >
             Message
-            <span className={styles.optional}>Optional</span>
+            <span className={styles.optional}>
+              Optional
+            </span>
           </label>
 
           <span
             className={`${styles.counter} ${
-              message.length > 500 ? styles.counterError : ""
+              message.length > 500
+                ? styles.counterError
+                : ""
             }`}
           >
             {message.length}/500
@@ -249,18 +312,27 @@ export default function BookingForm({
           placeholder="Tell us about your tattoo idea, placement or preferred style..."
           aria-invalid={Boolean(errors.message)}
           aria-describedby={
-            errors.message ? "message-error" : "message-help"
+            errors.message
+              ? "message-error"
+              : "message-help"
           }
           {...register("message")}
         />
 
         {errors.message ? (
-          <p className={styles.error} id="message-error">
+          <p
+            className={styles.error}
+            id="message-error"
+          >
             {errors.message.message}
           </p>
         ) : (
-          <p className={styles.help} id="message-help">
-            You can provide more details during your consultation.
+          <p
+            className={styles.help}
+            id="message-help"
+          >
+            You can provide more details during your
+            consultation.
           </p>
         )}
       </div>
@@ -268,16 +340,22 @@ export default function BookingForm({
       <button
         className={styles.submitButton}
         type="submit"
-        disabled={isSubmitting}
+        disabled={
+          isSubmitting ||
+          isArtistsLoading ||
+          isArtistsError
+        }
       >
-        {isSubmitting ? "Sending request..." : "Request consultation"}
+        {isSubmitting
+          ? "Sending request..."
+          : "Request consultation"}
 
         <span aria-hidden="true">→</span>
       </button>
 
       <p className={styles.disclaimer}>
-        This is a consultation request. Your appointment will be confirmed
-        after the studio contacts you.
+        This is a consultation request. Your appointment
+        will be confirmed after the studio contacts you.
       </p>
     </form>
   );

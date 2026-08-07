@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import AppToaster from "@/components/AppToaster/AppToaster";
 import "./globals.css";
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
 const themeScript = `
   try {
     const savedTheme = localStorage.getItem("scar-theme");
+
     const prefersDark = window.matchMedia(
       "(prefers-color-scheme: dark)"
     ).matches;
@@ -46,14 +48,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-
       <body className={`${cormorant.variable} ${manrope.variable}`}>
         {children}
         <AppToaster />
       </body>
+
+      <Script
+        id="theme-script"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{ __html: themeScript }}
+      />
     </html>
   );
 }

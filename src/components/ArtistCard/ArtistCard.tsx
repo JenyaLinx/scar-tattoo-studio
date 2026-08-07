@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Artist } from "@/data/artists";
+import type { Artist } from "@/types/artist";
 import styles from "./ArtistCard.module.css";
 
 type ArtistCardProps = {
@@ -15,18 +15,22 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
         href={`/artists/${artist.slug}`}
         aria-label={`View ${artist.name}'s profile`}
       >
-        <Image
-          className={styles.image}
-          src={artist.image}
-          alt={`${artist.name}, ${artist.specialty} tattoo artist`}
-          fill
-          sizes="(max-width: 767px) 100vw, 33vw"
-        />
+        {artist.image_url && (
+          <Image
+            className={styles.image}
+            src={artist.image_url}
+            alt={`${artist.name}, ${artist.specialty} tattoo artist`}
+            fill
+            sizes="(max-width: 767px) 100vw, 33vw"
+          />
+        )}
 
         <div className={styles.overlay} />
 
         <div className={styles.imageContent}>
-          <span className={styles.specialty}>{artist.specialty}</span>
+          <span className={styles.specialty}>
+            {artist.specialty}
+          </span>
 
           <span className={styles.viewText}>
             View artist
@@ -39,7 +43,10 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
         <div className={styles.heading}>
           <div>
             <h3 className={styles.name}>{artist.name}</h3>
-            <p className={styles.role}>{artist.specialty} artist</p>
+
+            <p className={styles.role}>
+              {artist.specialty} artist
+            </p>
           </div>
 
           <span className={styles.number}>
@@ -47,7 +54,11 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
           </span>
         </div>
 
-        <p className={styles.description}>{artist.description}</p>
+        {artist.description && (
+          <p className={styles.description}>
+            {artist.description}
+          </p>
+        )}
 
         <div className={styles.footer}>
           <Link
@@ -59,32 +70,38 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
           </Link>
 
           <div className={styles.socials}>
-            <a
-              href={artist.instagram}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`${artist.name} on Instagram`}
-            >
-              IG
-            </a>
+            {artist.instagram_url && (
+              <a
+                href={artist.instagram_url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${artist.name} on Instagram`}
+              >
+                IG
+              </a>
+            )}
 
-            <a
-              href={artist.tiktok}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`${artist.name} on TikTok`}
-            >
-              TT
-            </a>
+            {artist.tiktok_url && (
+              <a
+                href={artist.tiktok_url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${artist.name} on TikTok`}
+              >
+                TT
+              </a>
+            )}
 
-            <a
-              href={artist.facebook}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`${artist.name} on Facebook`}
-            >
-              FB
-            </a>
+            {artist.facebook_url && (
+              <a
+                href={artist.facebook_url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${artist.name} on Facebook`}
+              >
+                FB
+              </a>
+            )}
           </div>
         </div>
       </div>

@@ -1,9 +1,11 @@
 import Link from "next/link";
 import ArtistCard from "@/components/ArtistCard/ArtistCard";
-import { artists } from "@/data/artists";
+import { getArtists } from "@/lib/queries/artists";
 import styles from "./ArtistsPreview.module.css";
 
-export default function ArtistsPreview() {
+export default async function ArtistsPreview() {
+  const artists = await getArtists();
+
   return (
     <section className={styles.section}>
       <div className={styles.heading}>

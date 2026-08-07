@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ArtistCard from "@/components/ArtistCard/ArtistCard";
 import Header from "@/components/Header/Header";
-import { artists } from "@/data/artists";
+import { getArtists } from "@/lib/queries/artists";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -10,7 +10,9 @@ export const metadata: Metadata = {
     "Meet the professional tattoo artists at SCAR Tattoo Studio and explore their individual styles.",
 };
 
-export default function ArtistsPage() {
+export default async function ArtistsPage() {
+  const artists = await getArtists();
+
   return (
     <main className={styles.page}>
       <Header />

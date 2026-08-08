@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import AppToaster from "@/components/AppToaster/AppToaster";
 import QueryProvider from "@/components/QueryProvider/QueryProvider";
@@ -23,25 +22,6 @@ export const metadata: Metadata = {
     "Discover professional tattoo artists, explore their work and book a consultation.",
 };
 
-const themeScript = `
-  try {
-    const savedTheme = localStorage.getItem("scar-theme");
-
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-
-    const theme =
-      savedTheme === "light" || savedTheme === "dark"
-        ? savedTheme
-        : prefersDark
-          ? "dark"
-          : "light";
-
-    document.documentElement.dataset.theme = theme;
-  } catch {}
-`;
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -55,14 +35,6 @@ export default function RootLayout({
           <AppToaster />
         </QueryProvider>
       </body>
-
-      <Script
-        id="theme-script"
-        strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{
-          __html: themeScript,
-        }}
-      />
     </html>
   );
 }

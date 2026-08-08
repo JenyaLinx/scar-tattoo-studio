@@ -5,12 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
-import { getArtistsClient } from "@/lib/queries/artistsClient";
+import { getArtistsClient } from "@/services/artists/artists.client";
 import {
   bookingSchema,
   type BookingFormValues,
 } from "@/lib/validations/bookingSchema";
 import styles from "./BookingForm.module.css";
+import { artistKeys } from "@/services/artists/artists.keys";
 
 type BookingFormProps = {
   initialArtist?: string;
@@ -36,7 +37,7 @@ export default function BookingForm({
     isLoading: isArtistsLoading,
     isError: isArtistsError,
   } = useQuery({
-    queryKey: ["artists"],
+    queryKey: artistKeys.all,
     queryFn: getArtistsClient,
   });
 

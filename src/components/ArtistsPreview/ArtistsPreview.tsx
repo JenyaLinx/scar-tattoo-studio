@@ -1,6 +1,6 @@
 import Link from "next/link";
 import ArtistCard from "@/components/ArtistCard/ArtistCard";
-import { getArtists } from "@/lib/queries/artists";
+import { getArtists } from "@/services/artists/artists.server";
 import styles from "./ArtistsPreview.module.css";
 
 export default async function ArtistsPreview() {

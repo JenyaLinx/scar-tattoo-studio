@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ArtistCard from "@/components/ArtistCard/ArtistCard";
 import Header from "@/components/Header/Header";
-import { getArtists } from "@/lib/queries/artists";
+import { getArtists } from "@/services/artists/artists.server";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {

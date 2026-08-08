@@ -51,7 +51,7 @@ export default function Hero() {
   return (
     <section className={styles.hero}>
       <div className={styles.content}>
-        <p className={styles.eyebrow}>Cheltenham tattoo studio</p>
+        <p className={styles.eyebrow}>London tattoo studio</p>
 
         <h1 className={styles.title}>
           Art that stays

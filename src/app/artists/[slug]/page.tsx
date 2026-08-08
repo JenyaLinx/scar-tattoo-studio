@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header/Header";
 import ReviewForm from "@/components/ReviewForm/ReviewForm";
-import { getArtistBySlug } from "@/lib/queries/artists";
+import { getArtistBySlug } from "@/services/artists/artists.server";
 import { getReviewsByArtistId } from "@/data/reviews";
 import styles from "./page.module.css";
 

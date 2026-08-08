@@ -4,26 +4,33 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
-        <div className={styles.info}>
-          <p>London, United Kingdom</p>
+        <div className={styles.contact}>
+          <p className={styles.location}>London, United Kingdom</p>
 
-          <a href="tel:+440000000000">+44 00 0000 000</a>
+          <a className={styles.link} href="tel:+44000000000">
+            +44 00 0000 000
+          </a>
 
-          <a href="mailto:mail@scartattoo.co.uk">
+          <a
+            className={styles.link}
+            href="mailto:mail@scartattoo.co.uk"
+          >
             Mail @ ScarTattoo
           </a>
         </div>
 
         <div className={styles.hours}>
-          <p className={styles.title}>Opening Hours</p>
+          <p className={styles.hoursTitle}>Opening hours</p>
 
-          <p>Mon – Sat</p>
-          <p>10:00 – 22:00</p>
+          <div className={styles.hoursRow}>
+            <span>Mon – Sat</span>
+            <span>10:00 – 22:00</span>
+          </div>
 
-          <div className={styles.space}></div>
-
-          <p>Sunday</p>
-          <p>Closed</p>
+          <div className={styles.hoursRow}>
+            <span>Sunday</span>
+            <span>Closed</span>
+          </div>
         </div>
       </div>
 

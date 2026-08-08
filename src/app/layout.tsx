@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
+
+import Footer from "@/components/Footer/Footer";
 import AppToaster from "@/components/AppToaster/AppToaster";
 import QueryProvider from "@/components/QueryProvider/QueryProvider";
+
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -30,10 +33,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${cormorant.variable} ${manrope.variable}`}>
-        <QueryProvider>
-          {children}
-          <AppToaster />
-        </QueryProvider>
+        <QueryProvider>{children}</QueryProvider>
+
+        <Footer />
+
+        <AppToaster />
       </body>
     </html>
   );

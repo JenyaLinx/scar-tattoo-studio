@@ -22,7 +22,8 @@ export const signUpSchema = z
       .min(1, "Please confirm your password"),
   })
   .refine(
-    (values) => values.password === values.confirmPassword,
+    (values) =>
+      values.password === values.confirmPassword,
     {
       message: "Passwords do not match",
       path: ["confirmPassword"],
@@ -35,8 +36,36 @@ export const signInSchema = z.object({
     .trim()
     .email("Please enter a valid email address"),
 
-  password: z.string().min(1, "Password is required"),
+  password: z
+    .string()
+    .min(1, "Password is required"),
 });
+
+export const forgotPasswordSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .email("Please enter a valid email address"),
+});
+
+export const updatePasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "Password must contain at least 8 characters"),
+
+    confirmPassword: z
+      .string()
+      .min(1, "Please confirm your password"),
+  })
+  .refine(
+    (values) =>
+      values.password === values.confirmPassword,
+    {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    },
+  );
 
 export type SignUpFormValues = z.infer<
   typeof signUpSchema
@@ -44,4 +73,12 @@ export type SignUpFormValues = z.infer<
 
 export type SignInFormValues = z.infer<
   typeof signInSchema
+>;
+
+export type ForgotPasswordFormValues = z.infer<
+  typeof forgotPasswordSchema
+>;
+
+export type UpdatePasswordFormValues = z.infer<
+  typeof updatePasswordSchema
 >;

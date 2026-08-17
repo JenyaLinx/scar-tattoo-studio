@@ -63,3 +63,40 @@ export async function signOut() {
     throw new Error(error.message);
   }
 }
+
+export async function requestPasswordReset(
+  email: string,
+) {
+  const supabase = createClient();
+
+  const redirectTo =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/update-password`
+      : undefined;
+
+  const { error } =
+    await supabase.auth.resetPasswordForEmail(
+      email,
+      {
+        redirectTo,
+      },
+    );
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function updatePassword(
+  password: string,
+) {
+  const supabase = createClient();
+
+  const { error } = await supabase.auth.updateUser({
+    password,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}

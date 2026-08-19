@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import type { User } from "@supabase/supabase-js";
+
 import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
+import { createClient } from "@/lib/supabase/client";
+import { signOut } from "@/services/auth/auth.client";
+
 import styles from "./Header.module.css";
 
 const navigationLinks = [
@@ -34,9 +39,41 @@ const navigationLinks = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    const supabase = createClient();
+
+    const loadUser = async () => {
+      const {
+        data: { user: currentUser },
+      } = await supabase.auth.getUser();
+
+      setUser(currentUser);
+      setIsAuthLoading(false);
+    };
+
+    void loadUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+        setIsAuthLoading(false);
+      },
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen
+      ? "hidden"
+      : "";
 
     return () => {
       document.body.style.overflow = "";
@@ -51,6 +88,46 @@ export default function Header() {
     setIsMenuOpen((currentState) => !currentState);
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+
+      setUser(null);
+      closeMenu();
+
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Unable to sign out:", error);
+    }
+  };
+
+  const accountLinks = user
+    ? [
+        {
+          label: "My bookings",
+          href: "/my-bookings",
+        },
+        {
+          label: "Profile",
+          href: "/profile",
+        },
+      ]
+    : [
+        {
+          label: "Sign in",
+          href: "/sign-in",
+        },
+        {
+          label: "Create account",
+          href: "/sign-up",
+        },
+      ];
+
+  const allNavigationLinks = [
+    ...navigationLinks,
+    ...accountLinks,
+  ];
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -60,8 +137,13 @@ export default function Header() {
           onClick={closeMenu}
           aria-label="SCAR Tattoo Studio home page"
         >
-          <span className={styles.logoMain}>SCAR</span>
-          <span className={styles.logoSmall}>Tattoo Studio</span>
+          <span className={styles.logoMain}>
+            SCAR
+          </span>
+
+          <span className={styles.logoSmall}>
+            Tattoo Studio
+          </span>
         </Link>
 
         <div className={styles.controls}>
@@ -69,11 +151,17 @@ export default function Header() {
 
           <button
             className={`${styles.menuButton} ${
-              isMenuOpen ? styles.menuButtonOpen : ""
+              isMenuOpen
+                ? styles.menuButtonOpen
+                : ""
             }`}
             type="button"
             onClick={toggleMenu}
-            aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-label={
+              isMenuOpen
+                ? "Close navigation menu"
+                : "Open navigation menu"
+            }
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
           >
@@ -85,7 +173,9 @@ export default function Header() {
 
       <div
         className={`${styles.menuOverlay} ${
-          isMenuOpen ? styles.menuOverlayOpen : ""
+          isMenuOpen
+            ? styles.menuOverlayOpen
+            : ""
         }`}
         aria-hidden={!isMenuOpen}
       >
@@ -94,43 +184,75 @@ export default function Header() {
           id="mobile-navigation"
           aria-label="Main navigation"
         >
-          <ul className={styles.navigationList}>
-            {navigationLinks.map((link, index) => (
-              <li
-                className={styles.navigationItem}
-                key={link.href}
-                style={{
-                  "--navigation-delay": `${index * 45}ms`,
-                } as React.CSSProperties}
+          {!isAuthLoading && (
+            <ul className={styles.navigationList}>
+              {allNavigationLinks.map(
+                (link, index) => (
+                  <li
+                    className={
+                      styles.navigationItem
+                    }
+                    key={link.href}
+                    style={
+                      {
+                        "--navigation-delay": `${index * 45}ms`,
+                      } as React.CSSProperties
+                    }
+                  >
+                    <Link
+                      className={
+                        styles.navigationLink
+                      }
+                      href={link.href}
+                      onClick={closeMenu}
+                      tabIndex={
+                        isMenuOpen ? 0 : -1
+                      }
+                    >
+                      <span
+                        className={
+                          styles.navigationNumber
+                        }
+                      >
+                        {String(
+                          index + 1,
+                        ).padStart(2, "0")}
+                      </span>
+
+                      <span>{link.label}</span>
+                    </Link>
+                  </li>
+                ),
+              )}
+            </ul>
+          )}
+
+          <div className={styles.menuActions}>
+            <Link
+              className={styles.bookingLink}
+              href="/booking"
+              onClick={closeMenu}
+              tabIndex={isMenuOpen ? 0 : -1}
+            >
+              Book a consultation
+            </Link>
+
+            {user && (
+              <button
+                className={styles.signOutButton}
+                type="button"
+                onClick={handleSignOut}
+                tabIndex={isMenuOpen ? 0 : -1}
               >
-                <Link
-                  className={styles.navigationLink}
-                  href={link.href}
-                  onClick={closeMenu}
-                  tabIndex={isMenuOpen ? 0 : -1}
-                >
-                  <span className={styles.navigationNumber}>
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-
-                  <span>{link.label}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <Link
-            className={styles.bookingLink}
-            href="/booking"
-            onClick={closeMenu}
-            tabIndex={isMenuOpen ? 0 : -1}
-          >
-            Book a consultation
-          </Link>
+                Sign out
+              </button>
+            )}
+          </div>
 
           <div className={styles.menuFooter}>
             <p className={styles.menuFooterText}>
-              Custom tattoos created with precision, character and care.
+              Custom tattoos created with
+              precision, character and care.
             </p>
 
             <div className={styles.socialLinks}>

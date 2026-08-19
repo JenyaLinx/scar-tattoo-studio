@@ -148,6 +148,7 @@
   gap: 18px;
   min-height: 69px;
   border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
   font-family: var(--font-heading);
   font-size: 31px;
   line-height: 1;
@@ -171,21 +172,34 @@
   letter-spacing: 0.12em;
 }
 
-.bookingLink {
+.menuActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.bookingLink,
+.signOutButton {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 54px;
-  margin-top: 30px;
   padding: 14px 24px;
   border-radius: 4px;
-  background-color: var(--color-accent);
-  color: var(--color-text-inverse);
   font-size: 13px;
   font-weight: 600;
   transition:
     background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
     transform var(--transition-fast);
+}
+
+.bookingLink {
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
 }
 
 .bookingLink:hover {
@@ -193,7 +207,21 @@
   transform: translateY(-2px);
 }
 
-.bookingLink:focus-visible {
+.signOutButton {
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.signOutButton:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.bookingLink:focus-visible,
+.signOutButton:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
 }
@@ -241,5 +269,39 @@
   .navigation {
     padding-right: 32px;
     padding-left: 32px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .navigation {
+    max-width: 720px;
+    margin-left: auto;
+    padding: 140px 48px 40px;
+  }
+
+  .navigationLink {
+    min-height: 74px;
+    font-size: 36px;
+  }
+
+  .menuActions {
+    flex-direction: row;
+  }
+
+  .bookingLink,
+  .signOutButton {
+    flex: 1;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .navigation {
+    max-width: 780px;
+    padding-right: 64px;
+    padding-left: 64px;
+  }
+
+  .navigationLink {
+    font-size: 40px;
   }
 }

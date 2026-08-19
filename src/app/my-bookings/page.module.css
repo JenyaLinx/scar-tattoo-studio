@@ -1,0 +1,212 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 46px;
+  padding: 72px 0;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+}
+
+.eyebrow,
+.artistLabel,
+.messageLabel {
+  color: var(--color-accent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  font-size: clamp(55px, 16vw, 76px);
+  font-weight: 500;
+  line-height: 0.88;
+  letter-spacing: -0.05em;
+}
+
+.title span {
+  color: var(--color-accent);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.description {
+  max-width: 330px;
+  margin-top: 24px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.content {
+  border-top: 1px solid var(--color-border);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.number,
+.date {
+  color: var(--color-text-secondary);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.artistName {
+  margin-top: 8px;
+  font-family: var(--font-heading);
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.specialty {
+  margin-top: 8px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 11px;
+}
+
+.detailRow span {
+  color: var(--color-text-secondary);
+}
+
+.detailRow strong {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.message {
+  padding: 18px;
+  background-color: var(--color-surface);
+}
+
+.message p:last-child {
+  margin-top: 10px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.artistLink,
+.bookButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-text-primary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.artistLink {
+  width: fit-content;
+  gap: 24px;
+}
+
+.artistLink:hover {
+  color: var(--color-accent);
+}
+
+.empty {
+  padding: 55px 0;
+}
+
+.emptyNumber {
+  color: var(--color-accent);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+}
+
+.empty h2 {
+  margin-top: 16px;
+  font-size: 38px;
+  font-weight: 500;
+}
+
+.empty p {
+  max-width: 300px;
+  margin-top: 12px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.bookButton {
+  max-width: 270px;
+  min-height: 55px;
+  margin-top: 30px;
+  padding: 0 18px;
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+}
+
+@media screen and (min-width: 768px) {
+  .page {
+    padding: 28px 32px;
+  }
+
+  .section {
+    display: grid;
+    grid-template-columns: 0.75fr 1.25fr;
+    gap: 80px;
+    padding-top: 100px;
+  }
+
+  .content {
+    padding-left: 48px;
+    border-top: 0;
+    border-left: 1px solid var(--color-border);
+  }
+
+  .card {
+    padding: 32px 0;
+  }
+}

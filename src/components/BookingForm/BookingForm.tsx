@@ -1,18 +1,21 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
+
 import { getArtistsClient } from "@/services/artists/artists.client";
+import { artistKeys } from "@/services/artists/artists.keys";
+import { createBooking } from "@/services/bookings/bookings.client";
 import {
   bookingSchema,
   type BookingFormValues,
 } from "@/lib/validations/bookingSchema";
+
 import styles from "./BookingForm.module.css";
-import { artistKeys } from "@/services/artists/artists.keys";
-import { createBooking } from "@/services/bookings/bookings.client";
+
 
 type BookingFormProps = {
   initialArtist?: string;
@@ -53,70 +56,77 @@ export default function BookingForm({
   }, []);
 
   const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    formState: { errors, isSubmitting },
-  } = useForm<BookingFormValues>({
-    resolver: zodResolver(bookingSchema),
-    values: {
-      artist:
-        artists.some((artist) => artist.slug === initialArtist)
-          ? initialArtist
-          : "",
-      date: "",
-      time: "",
-      phone: "",
-      message: "",
-    },
-    resetOptions: {
-      keepDirtyValues: true,
-    },
-  });
+  register,
+  handleSubmit,
+  reset,
+  control,
+  setValue,
+  formState: { errors, isSubmitting },
+} = useForm<BookingFormValues>({
+  resolver: zodResolver(bookingSchema),
+  defaultValues: {
+    artist: "",
+    date: "",
+    time: "",
+    phone: "",
+    message: "",
+  },
+});
 
   const message =
     useWatch({
       control,
       name: "message",
     }) ?? "";
-
-  const onSubmit = async (values: BookingFormValues) => {
-  try {
-    const selectedArtist = artists.find(
-      (artist) => artist.slug === values.artist,
-    );
-
-    if (!selectedArtist) {
-      toast.error("Please select a valid artist.");
-      return;
-    }
-
-    await createBooking({
-      artistId: selectedArtist.id,
-      bookingDate: values.date,
-      bookingTime: values.time,
-      phone: values.phone,
-      message: values.message,
-    });
-
-    toast.success("Your consultation request has been sent.");
-
-    reset({
-      artist: values.artist,
-      date: "",
-      time: "",
-      phone: "",
-      message: "",
-    });
-  } catch (error) {
-    toast.error(
-      error instanceof Error
-        ? error.message
-        : "Unable to create booking.",
-    );
+useEffect(() => {
+  if (
+    initialArtist &&
+    artists.some((artist) => artist.slug === initialArtist)
+  ) {
+    setValue("artist", initialArtist);
   }
-};
+}, [artists, initialArtist, setValue]);
+  
+  const onSubmit = async (
+    values: BookingFormValues,
+  ) => {
+    try {
+      const selectedArtist = artists.find(
+        (artist) => artist.slug === values.artist,
+      );
+
+      if (!selectedArtist) {
+        toast.error("Please select a valid artist.");
+        return;
+      }
+
+      await createBooking({
+        artistId: selectedArtist.id,
+        bookingDate: values.date,
+        bookingTime: values.time,
+        phone: values.phone,
+        message: values.message,
+      });
+
+      toast.success(
+        "Your consultation request has been sent.",
+      );
+
+      reset({
+        artist: values.artist,
+        date: "",
+        time: "",
+        phone: "",
+        message: "",
+      });
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to create booking.",
+      );
+    }
+  };
 
   return (
     <form
@@ -125,7 +135,10 @@ export default function BookingForm({
       noValidate
     >
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="artist">
+        <label
+          className={styles.label}
+          htmlFor="artist"
+        >
           Choose artist
           <span className={styles.required}>*</span>
         </label>
@@ -136,10 +149,14 @@ export default function BookingForm({
               errors.artist ? styles.controlError : ""
             }`}
             id="artist"
-            disabled={isArtistsLoading || isArtistsError}
+            disabled={
+              isArtistsLoading || isArtistsError
+            }
             aria-invalid={Boolean(errors.artist)}
             aria-describedby={
-              errors.artist ? "artist-error" : undefined
+              errors.artist
+                ? "artist-error"
+                : undefined
             }
             {...register("artist")}
           >
@@ -180,14 +197,18 @@ export default function BookingForm({
 
         {isArtistsError && (
           <p className={styles.error}>
-            Unable to load artists. Please refresh the page.
+            Unable to load artists. Please refresh
+            the page.
           </p>
         )}
       </div>
 
       <div className={styles.row}>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="date">
+          <label
+            className={styles.label}
+            htmlFor="date"
+          >
             Preferred date
             <span className={styles.required}>*</span>
           </label>
@@ -217,7 +238,10 @@ export default function BookingForm({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="time">
+          <label
+            className={styles.label}
+            htmlFor="time"
+          >
             Preferred time
             <span className={styles.required}>*</span>
           </label>
@@ -225,19 +249,26 @@ export default function BookingForm({
           <div className={styles.selectWrapper}>
             <select
               className={`${styles.control} ${
-                errors.time ? styles.controlError : ""
+                errors.time
+                  ? styles.controlError
+                  : ""
               }`}
               id="time"
               aria-invalid={Boolean(errors.time)}
               aria-describedby={
-                errors.time ? "time-error" : undefined
+                errors.time
+                  ? "time-error"
+                  : undefined
               }
               {...register("time")}
             >
               <option value="">Select time</option>
 
               {availableTimes.map((time) => (
-                <option value={time} key={time}>
+                <option
+                  value={time}
+                  key={time}
+                >
                   {time}
                 </option>
               ))}
@@ -263,7 +294,10 @@ export default function BookingForm({
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label} htmlFor="phone">
+        <label
+          className={styles.label}
+          htmlFor="phone"
+        >
           Phone number
           <span className={styles.required}>*</span>
         </label>
@@ -278,7 +312,9 @@ export default function BookingForm({
           autoComplete="tel"
           aria-invalid={Boolean(errors.phone)}
           aria-describedby={
-            errors.phone ? "phone-error" : undefined
+            errors.phone
+              ? "phone-error"
+              : undefined
           }
           {...register("phone")}
         />
@@ -317,8 +353,12 @@ export default function BookingForm({
         </div>
 
         <textarea
-          className={`${styles.control} ${styles.textarea} ${
-            errors.message ? styles.controlError : ""
+          className={`${styles.control} ${
+            styles.textarea
+          } ${
+            errors.message
+              ? styles.controlError
+              : ""
           }`}
           id="message"
           rows={6}
@@ -344,8 +384,8 @@ export default function BookingForm({
             className={styles.help}
             id="message-help"
           >
-            You can provide more details during your
-            consultation.
+            You can provide more details during
+            your consultation.
           </p>
         )}
       </div>
@@ -367,8 +407,9 @@ export default function BookingForm({
       </button>
 
       <p className={styles.disclaimer}>
-        This is a consultation request. Your appointment
-        will be confirmed after the studio contacts you.
+        This is a consultation request. Your
+        appointment will be confirmed after the
+        studio contacts you.
       </p>
     </form>
   );

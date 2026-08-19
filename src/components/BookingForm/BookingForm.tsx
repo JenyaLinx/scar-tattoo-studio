@@ -12,6 +12,7 @@ import {
 } from "@/lib/validations/bookingSchema";
 import styles from "./BookingForm.module.css";
 import { artistKeys } from "@/services/artists/artists.keys";
+import { createBooking } from "@/services/bookings/bookings.client";
 
 type BookingFormProps = {
   initialArtist?: string;
@@ -81,30 +82,41 @@ export default function BookingForm({
     }) ?? "";
 
   const onSubmit = async (values: BookingFormValues) => {
-    try {
-      console.log("Booking request:", values);
+  try {
+    const selectedArtist = artists.find(
+      (artist) => artist.slug === values.artist,
+    );
 
-      await new Promise((resolve) => {
-        window.setTimeout(resolve, 700);
-      });
-
-      toast.success(
-        "Your consultation request has been sent.",
-      );
-
-      reset({
-        artist: values.artist,
-        date: "",
-        time: "",
-        phone: "",
-        message: "",
-      });
-    } catch {
-      toast.error(
-        "Something went wrong. Please try again.",
-      );
+    if (!selectedArtist) {
+      toast.error("Please select a valid artist.");
+      return;
     }
-  };
+
+    await createBooking({
+      artistId: selectedArtist.id,
+      bookingDate: values.date,
+      bookingTime: values.time,
+      phone: values.phone,
+      message: values.message,
+    });
+
+    toast.success("Your consultation request has been sent.");
+
+    reset({
+      artist: values.artist,
+      date: "",
+      time: "",
+      phone: "",
+      message: "",
+    });
+  } catch (error) {
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Unable to create booking.",
+    );
+  }
+};
 
   return (
     <form

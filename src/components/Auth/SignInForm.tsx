@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -16,6 +19,7 @@ import styles from "./AuthForm.module.css";
 
 export default function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const {
     register,
@@ -37,7 +41,14 @@ export default function SignInForm() {
 
       toast.success("Welcome back.");
 
-      router.push("/profile");
+      const next = searchParams.get("next");
+
+      const destination =
+        next && next.startsWith("/")
+          ? next
+          : "/profile";
+
+      router.push(destination);
       router.refresh();
     } catch (error) {
       toast.error(
@@ -64,7 +75,9 @@ export default function SignInForm() {
 
         <input
           className={`${styles.input} ${
-            errors.email ? styles.inputError : ""
+            errors.email
+              ? styles.inputError
+              : ""
           }`}
           id="email"
           type="email"
@@ -99,7 +112,9 @@ export default function SignInForm() {
 
         <input
           className={`${styles.input} ${
-            errors.password ? styles.inputError : ""
+            errors.password
+              ? styles.inputError
+              : ""
           }`}
           id="password"
           type="password"
@@ -131,7 +146,9 @@ export default function SignInForm() {
 
       <p className={styles.switchText}>
         New to SCAR?{" "}
-        <Link href="/sign-up">Create an account</Link>
+        <Link href="/sign-up">
+          Create an account
+        </Link>
       </p>
     </form>
   );

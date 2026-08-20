@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+
 import BookingForm from "@/components/BookingForm/BookingForm";
 import Header from "@/components/Header/Header";
+import { getCurrentUser } from "@/services/auth/auth.server";
+
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -18,6 +22,8 @@ type BookingPageProps = {
 export default async function BookingPage({
   searchParams,
 }: BookingPageProps) {
+  const user = await getCurrentUser();
+
   const resolvedSearchParams = await searchParams;
 
   const initialArtist =
@@ -25,12 +31,24 @@ export default async function BookingPage({
       ? resolvedSearchParams.artist
       : "";
 
+  if (!user) {
+    const bookingUrl = initialArtist
+      ? `/booking?artist=${encodeURIComponent(initialArtist)}`
+      : "/booking";
+
+    redirect(
+      `/sign-in?next=${encodeURIComponent(bookingUrl)}`,
+    );
+  }
+
   return (
     <main className={styles.page}>
       <Header />
 
       <section className={styles.hero}>
-        <p className={styles.eyebrow}>Book a consultation</p>
+        <p className={styles.eyebrow}>
+          Book a consultation
+        </p>
 
         <h1 className={styles.title}>
           Begin your
@@ -45,10 +63,14 @@ export default async function BookingPage({
 
       <section className={styles.bookingSection}>
         <div className={styles.sectionHeading}>
-          <span className={styles.stepNumber}>01</span>
+          <span className={styles.stepNumber}>
+            01
+          </span>
 
           <div>
-            <h2 className={styles.sectionTitle}>Your request</h2>
+            <h2 className={styles.sectionTitle}>
+              Your request
+            </h2>
 
             <p className={styles.sectionDescription}>
               Complete the form below. Fields marked with an asterisk are
@@ -61,7 +83,9 @@ export default async function BookingPage({
       </section>
 
       <section className={styles.process}>
-        <p className={styles.processEyebrow}>What happens next</p>
+        <p className={styles.processEyebrow}>
+          What happens next
+        </p>
 
         <div className={styles.processList}>
           <article className={styles.processItem}>
@@ -69,6 +93,7 @@ export default async function BookingPage({
 
             <div>
               <h3>Send your request</h3>
+
               <p>
                 Select your artist, date and preferred consultation time.
               </p>
@@ -80,6 +105,7 @@ export default async function BookingPage({
 
             <div>
               <h3>We contact you</h3>
+
               <p>
                 The studio confirms availability and discusses your idea.
               </p>
@@ -91,6 +117,7 @@ export default async function BookingPage({
 
             <div>
               <h3>Meet your artist</h3>
+
               <p>
                 Visit the studio for your confirmed consultation.
               </p>

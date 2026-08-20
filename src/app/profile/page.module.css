@@ -73,6 +73,43 @@
   font-size: 11px;
 }
 
+.accountActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bookingsLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 55px;
+  padding: 0 18px;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  color: var(--color-text-primary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.bookingsLink:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.bookingsLink:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
 .formWrapper {
   display: flex;
   flex-direction: column;
@@ -103,5 +140,13 @@
   .content {
     padding-left: 48px;
     border-left: 1px solid var(--color-border);
+  }
+
+  .accountActions {
+    flex-direction: row;
+  }
+
+  .accountActions > * {
+    flex: 1;
   }
 }

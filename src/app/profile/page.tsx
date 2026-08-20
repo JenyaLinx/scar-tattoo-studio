@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import Header from "@/components/Header/Header";
@@ -62,7 +63,17 @@ export default async function ProfilePage() {
               </p>
             </div>
 
-            <SignOutButton />
+            <div className={styles.accountActions}>
+              <Link
+                className={styles.bookingsLink}
+                href="/my-bookings"
+              >
+                <span>My bookings</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+
+              <SignOutButton />
+            </div>
           </div>
 
           <div className={styles.formWrapper}>

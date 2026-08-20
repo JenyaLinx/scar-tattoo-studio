@@ -4,12 +4,21 @@ import { redirect } from "next/navigation";
 
 import Header from "@/components/Header/Header";
 import { getCurrentUser } from "@/services/auth/auth.server";
-import { getCurrentUserBookings } from "@/services/bookings/bookings.server";
+import {
+  getCurrentUserBookings,
+  type BookingStatus,
+} from "@/services/bookings/bookings.server";
 
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "My Bookings | SCAR Tattoo Studio",
+};
+
+const statusLabels: Record<BookingStatus, string> = {
+  pending: "Request sent",
+  confirmed: "Confirmed",
+  cancelled: "Cancelled",
 };
 
 export default async function MyBookingsPage() {
@@ -79,64 +88,57 @@ export default async function MyBookingsPage() {
                       )}
                     </span>
 
-                    <span
-                      className={styles.date}
-                    >
-                      {booking.booking_date}
-                    </span>
+                    <div className={styles.cardMeta}>
+                      <span
+                        className={`${styles.status} ${
+                          styles[
+                            `status${booking.status
+                              .charAt(0)
+                              .toUpperCase()}${booking.status.slice(
+                              1,
+                            )}`
+                          ]
+                        }`}
+                      >
+                        {statusLabels[booking.status]}
+                      </span>
+
+                      <span className={styles.date}>
+                        {booking.booking_date}
+                      </span>
+                    </div>
                   </div>
 
                   <div className={styles.cardContent}>
                     <div>
-                      <p
-                        className={
-                          styles.artistLabel
-                        }
-                      >
+                      <p className={styles.artistLabel}>
                         Tattoo artist
                       </p>
 
-                      <h2
-                        className={
-                          styles.artistName
-                        }
-                      >
+                      <h2 className={styles.artistName}>
                         {booking.artist?.name ??
                           "SCAR Artist"}
                       </h2>
 
                       {booking.artist && (
-                        <p
-                          className={
-                            styles.specialty
-                          }
-                        >
-                          {
-                            booking.artist
-                              .specialty
-                          }
+                        <p className={styles.specialty}>
+                          {booking.artist.specialty}
                         </p>
                       )}
                     </div>
 
                     <div className={styles.details}>
-                      <div
-                        className={
-                          styles.detailRow
-                        }
-                      >
+                      <div className={styles.detailRow}>
                         <span>Date</span>
+
                         <strong>
                           {booking.booking_date}
                         </strong>
                       </div>
 
-                      <div
-                        className={
-                          styles.detailRow
-                        }
-                      >
+                      <div className={styles.detailRow}>
                         <span>Time</span>
+
                         <strong>
                           {booking.booking_time.slice(
                             0,
@@ -145,28 +147,17 @@ export default async function MyBookingsPage() {
                         </strong>
                       </div>
 
-                      <div
-                        className={
-                          styles.detailRow
-                        }
-                      >
+                      <div className={styles.detailRow}>
                         <span>Phone</span>
-                        <strong>
-                          {booking.phone}
-                        </strong>
+
+                        <strong>{booking.phone}</strong>
                       </div>
                     </div>
 
                     {booking.message && (
-                      <div
-                        className={
-                          styles.message
-                        }
-                      >
+                      <div className={styles.message}>
                         <p
-                          className={
-                            styles.messageLabel
-                          }
+                          className={styles.messageLabel}
                         >
                           Message
                         </p>
@@ -177,15 +168,11 @@ export default async function MyBookingsPage() {
 
                     {booking.artist && (
                       <Link
-                        className={
-                          styles.artistLink
-                        }
+                        className={styles.artistLink}
                         href={`/artists/${booking.artist.slug}`}
                       >
                         View artist
-                        <span aria-hidden="true">
-                          →
-                        </span>
+                        <span aria-hidden="true">→</span>
                       </Link>
                     )}
                   </div>

@@ -7,12 +7,18 @@ type BookingArtist = {
   specialty: string;
 };
 
+export type BookingStatus =
+  | "pending"
+  | "confirmed"
+  | "cancelled";
+
 type BookingRow = {
   id: number;
   booking_date: string;
   booking_time: string;
   phone: string;
   message: string | null;
+  status: BookingStatus;
   created_at: string | null;
   artist: BookingArtist | BookingArtist[] | null;
 };
@@ -23,6 +29,7 @@ export type UserBooking = {
   booking_time: string;
   phone: string;
   message: string | null;
+  status: BookingStatus;
   created_at: string | null;
   artist: BookingArtist | null;
 };
@@ -49,6 +56,7 @@ export async function getCurrentUserBookings(): Promise<
       booking_time,
       phone,
       message,
+      status,
       created_at,
       artist:artists (
         id,
@@ -84,6 +92,7 @@ export async function getCurrentUserBookings(): Promise<
       booking_time: booking.booking_time,
       phone: booking.phone,
       message: booking.message,
+      status: booking.status,
       created_at: booking.created_at,
       artist,
     };

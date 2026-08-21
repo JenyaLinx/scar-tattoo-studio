@@ -73,30 +73,52 @@
   font-size: 11px;
 }
 
+.adminBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 25px;
+  margin-top: 14px;
+  padding: 4px 10px;
+  border: 1px solid #ad4c4c;
+  border-radius: 999px;
+  background-color: rgba(173, 76, 76, 0.08);
+  color: #ad4c4c;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .accountActions {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.bookingsLink {
+.bookingsLink,
+.adminLink {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   min-height: 55px;
   padding: 0 18px;
-  border: 1px solid var(--color-border);
   border-radius: 3px;
-  color: var(--color-text-primary);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   transition:
     border-color var(--transition-fast),
+    background-color var(--transition-fast),
     color var(--transition-fast),
     transform var(--transition-fast);
+}
+
+.bookingsLink {
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
 }
 
 .bookingsLink:hover {
@@ -105,7 +127,19 @@
   transform: translateY(-2px);
 }
 
-.bookingsLink:focus-visible {
+.adminLink {
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+}
+
+.adminLink:hover {
+  background-color: var(--color-accent-hover);
+  transform: translateY(-2px);
+}
+
+.bookingsLink:focus-visible,
+.adminLink:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
 }
@@ -143,10 +177,7 @@
   }
 
   .accountActions {
-    flex-direction: row;
-  }
-
-  .accountActions > * {
-    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

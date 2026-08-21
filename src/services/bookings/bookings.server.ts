@@ -14,6 +14,7 @@ export type BookingStatus =
 
 type BookingRow = {
   id: number;
+  user_id?: string;
   booking_date: string;
   booking_time: string;
   phone: string;
@@ -32,6 +33,10 @@ export type UserBooking = {
   status: BookingStatus;
   created_at: string | null;
   artist: BookingArtist | null;
+};
+
+export type AdminBooking = UserBooking & {
+  user_id: string;
 };
 
 export async function getCurrentUserBookings(): Promise<
@@ -88,6 +93,60 @@ export async function getCurrentUserBookings(): Promise<
 
     return {
       id: booking.id,
+      booking_date: booking.booking_date,
+      booking_time: booking.booking_time,
+      phone: booking.phone,
+      message: booking.message,
+      status: booking.status,
+      created_at: booking.created_at,
+      artist,
+    };
+  });
+}
+
+export async function getAllBookingsForAdmin(): Promise<
+  AdminBooking[]
+> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("bookings")
+    .select(`
+      id,
+      user_id,
+      booking_date,
+      booking_time,
+      phone,
+      message,
+      status,
+      created_at,
+      artist:artists (
+        id,
+        name,
+        slug,
+        specialty
+      )
+    `)
+    .order("created_at", {
+      ascending: false,
+    });
+
+  if (error) {
+    throw new Error(
+      `Failed to fetch admin bookings: ${error.message}`,
+    );
+  }
+
+  const bookings = (data ?? []) as BookingRow[];
+
+  return bookings.map((booking) => {
+    const artist = Array.isArray(booking.artist)
+      ? booking.artist[0] ?? null
+      : booking.artist;
+
+    return {
+      id: booking.id,
+      user_id: booking.user_id ?? "",
       booking_date: booking.booking_date,
       booking_time: booking.booking_time,
       phone: booking.phone,

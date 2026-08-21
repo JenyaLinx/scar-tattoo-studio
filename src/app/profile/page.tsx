@@ -24,6 +24,8 @@ export default async function ProfilePage() {
 
   const profile = await getProfile(user.id);
 
+  const isAdmin = profile?.role === "admin";
+
   return (
     <main className={styles.page}>
       <Header />
@@ -31,7 +33,9 @@ export default async function ProfilePage() {
       <section className={styles.section}>
         <div className={styles.heading}>
           <p className={styles.eyebrow}>
-            Client account
+            {isAdmin
+              ? "Administrator account"
+              : "Client account"}
           </p>
 
           <h1 className={styles.title}>
@@ -61,9 +65,25 @@ export default async function ProfilePage() {
               <p className={styles.accountEmail}>
                 {user.email}
               </p>
+
+              {isAdmin && (
+                <span className={styles.adminBadge}>
+                  Administrator
+                </span>
+              )}
             </div>
 
             <div className={styles.accountActions}>
+              {isAdmin && (
+                <Link
+                  className={styles.adminLink}
+                  href="/admin/bookings"
+                >
+                  <span>Manage bookings</span>
+                  <span aria-hidden="true">→</span>
+                </Link>
+              )}
+
               <Link
                 className={styles.bookingsLink}
                 href="/my-bookings"

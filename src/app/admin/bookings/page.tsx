@@ -83,6 +83,22 @@ export default async function AdminBookingsPage() {
                     </span>
                   </div>
 
+                  <div className={styles.client}>
+                    <p className={styles.label}>
+                      Client
+                    </p>
+
+                    <h2 className={styles.clientName}>
+                      {booking.client?.full_name ??
+                        "SCAR Client"}
+                    </h2>
+
+                    <p className={styles.clientEmail}>
+                      {booking.client?.email ??
+                        "Email unavailable"}
+                    </p>
+                  </div>
+
                   <div className={styles.artist}>
                     <p className={styles.label}>
                       Tattoo artist
@@ -124,16 +140,6 @@ export default async function AdminBookingsPage() {
                       <span>Phone</span>
 
                       <strong>{booking.phone}</strong>
-                    </div>
-
-                    <div className={styles.detailRow}>
-                      <span>User ID</span>
-
-                      <strong
-                        className={styles.userId}
-                      >
-                        {booking.user_id}
-                      </strong>
                     </div>
                   </div>
 

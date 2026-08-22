@@ -7,6 +7,12 @@ type BookingArtist = {
   specialty: string;
 };
 
+type BookingClient = {
+  id: string;
+  full_name: string | null;
+  email: string | null;
+};
+
 export type BookingStatus =
   | "pending"
   | "confirmed"
@@ -37,6 +43,7 @@ export type UserBooking = {
 
 export type AdminBooking = UserBooking & {
   user_id: string;
+  client: BookingClient | null;
 };
 
 export async function getCurrentUserBookings(): Promise<
@@ -139,14 +146,55 @@ export async function getAllBookingsForAdmin(): Promise<
 
   const bookings = (data ?? []) as BookingRow[];
 
+  const userIds = [
+    ...new Set(
+      bookings
+        .map((booking) => booking.user_id)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  ];
+
+  let profiles: BookingClient[] = [];
+
+  if (userIds.length > 0) {
+    const {
+      data: profileData,
+      error: profilesError,
+    } = await supabase
+      .from("profiles")
+      .select(`
+        id,
+        full_name,
+        email
+      `)
+      .in("id", userIds);
+
+    if (profilesError) {
+      throw new Error(
+        `Failed to fetch booking clients: ${profilesError.message}`,
+      );
+    }
+
+    profiles = profileData ?? [];
+  }
+
+  const profileMap = new Map(
+    profiles.map((profile) => [
+      profile.id,
+      profile,
+    ]),
+  );
+
   return bookings.map((booking) => {
     const artist = Array.isArray(booking.artist)
       ? booking.artist[0] ?? null
       : booking.artist;
 
+    const userId = booking.user_id ?? "";
+
     return {
       id: booking.id,
-      user_id: booking.user_id ?? "",
+      user_id: userId,
       booking_date: booking.booking_date,
       booking_time: booking.booking_time,
       phone: booking.phone,
@@ -154,6 +202,7 @@ export async function getAllBookingsForAdmin(): Promise<
       status: booking.status,
       created_at: booking.created_at,
       artist,
+      client: profileMap.get(userId) ?? null,
     };
   });
 }

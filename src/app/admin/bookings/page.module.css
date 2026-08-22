@@ -109,6 +109,27 @@
   color: #ad4c4c;
 }
 
+.client {
+  margin-bottom: 28px;
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.clientName {
+  margin-top: 8px;
+  font-family: var(--font-heading);
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.clientEmail {
+  margin-top: 8px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+}
+
 .artist h2 {
   margin-top: 8px;
   font-family: var(--font-heading);
@@ -146,13 +167,6 @@
 .detailRow strong {
   text-align: right;
   font-weight: 500;
-}
-
-.userId {
-  max-width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .message {

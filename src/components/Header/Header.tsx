@@ -10,6 +10,8 @@ import { signOut } from "@/services/auth/auth.client";
 
 import styles from "./Header.module.css";
 
+type UserRole = "client" | "admin";
+
 const navigationLinks = [
   {
     label: "Home",
@@ -40,10 +42,44 @@ const navigationLinks = [
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const [userRole, setUserRole] =
+    useState<UserRole | null>(null);
+  const [isAuthLoading, setIsAuthLoading] =
+    useState(true);
 
   useEffect(() => {
     const supabase = createClient();
+
+    const loadRole = async (
+      currentUser: User | null,
+    ) => {
+      if (!currentUser) {
+        setUserRole(null);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error(
+          "Unable to load user role:",
+          error,
+        );
+
+        setUserRole(null);
+        return;
+      }
+
+      setUserRole(
+        data?.role === "admin"
+          ? "admin"
+          : "client",
+      );
+    };
 
     const loadUser = async () => {
       const {
@@ -51,6 +87,9 @@ export default function Header() {
       } = await supabase.auth.getUser();
 
       setUser(currentUser);
+
+      await loadRole(currentUser);
+
       setIsAuthLoading(false);
     };
 
@@ -60,8 +99,14 @@ export default function Header() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setUser(session?.user ?? null);
-        setIsAuthLoading(false);
+        const currentUser =
+          session?.user ?? null;
+
+        setUser(currentUser);
+
+        void loadRole(currentUser).finally(() => {
+          setIsAuthLoading(false);
+        });
       },
     );
 
@@ -93,16 +138,32 @@ export default function Header() {
       await signOut();
 
       setUser(null);
+      setUserRole(null);
+
       closeMenu();
 
       window.location.href = "/";
     } catch (error) {
-      console.error("Unable to sign out:", error);
+      console.error(
+        "Unable to sign out:",
+        error,
+      );
     }
   };
 
   const accountLinks = user
+  ? userRole === "admin"
     ? [
+        {
+          label: "Admin bookings",
+          href: "/admin/bookings",
+        },
+        {
+          label: "Profile",
+          href: "/profile",
+        },
+      ]
+    : [
         {
           label: "My bookings",
           href: "/my-bookings",
@@ -112,17 +173,17 @@ export default function Header() {
           href: "/profile",
         },
       ]
-    : [
-        {
-          label: "Sign in",
-          href: "/sign-in",
-        },
-        {
-          label: "Create account",
-          href: "/sign-up",
-        },
-      ];
-
+  : [
+      {
+        label: "Sign in",
+        href: "/sign-in",
+      },
+      {
+        label: "Create account",
+        href: "/sign-up",
+      },
+    ];
+  
   const allNavigationLinks = [
     ...navigationLinks,
     ...accountLinks,
@@ -219,7 +280,9 @@ export default function Header() {
                         ).padStart(2, "0")}
                       </span>
 
-                      <span>{link.label}</span>
+                      <span>
+                        {link.label}
+                      </span>
                     </Link>
                   </li>
                 ),
@@ -239,10 +302,14 @@ export default function Header() {
 
             {user && (
               <button
-                className={styles.signOutButton}
+                className={
+                  styles.signOutButton
+                }
                 type="button"
                 onClick={handleSignOut}
-                tabIndex={isMenuOpen ? 0 : -1}
+                tabIndex={
+                  isMenuOpen ? 0 : -1
+                }
               >
                 Sign out
               </button>
@@ -250,17 +317,25 @@ export default function Header() {
           </div>
 
           <div className={styles.menuFooter}>
-            <p className={styles.menuFooterText}>
+            <p
+              className={
+                styles.menuFooterText
+              }
+            >
               Custom tattoos created with
               precision, character and care.
             </p>
 
-            <div className={styles.socialLinks}>
+            <div
+              className={styles.socialLinks}
+            >
               <a
                 href="https://www.instagram.com/"
                 target="_blank"
                 rel="noreferrer"
-                tabIndex={isMenuOpen ? 0 : -1}
+                tabIndex={
+                  isMenuOpen ? 0 : -1
+                }
               >
                 Instagram
               </a>
@@ -269,7 +344,9 @@ export default function Header() {
                 href="https://www.tiktok.com/"
                 target="_blank"
                 rel="noreferrer"
-                tabIndex={isMenuOpen ? 0 : -1}
+                tabIndex={
+                  isMenuOpen ? 0 : -1
+                }
               >
                 TikTok
               </a>
@@ -278,7 +355,9 @@ export default function Header() {
                 href="https://www.facebook.com/"
                 target="_blank"
                 rel="noreferrer"
-                tabIndex={isMenuOpen ? 0 : -1}
+                tabIndex={
+                  isMenuOpen ? 0 : -1
+                }
               >
                 Facebook
               </a>

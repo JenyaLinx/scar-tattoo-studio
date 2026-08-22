@@ -74,7 +74,7 @@ export default async function ProfilePage() {
             </div>
 
             <div className={styles.accountActions}>
-              {isAdmin && (
+              {isAdmin ? (
                 <Link
                   className={styles.adminLink}
                   href="/admin/bookings"
@@ -82,15 +82,15 @@ export default async function ProfilePage() {
                   <span>Manage bookings</span>
                   <span aria-hidden="true">→</span>
                 </Link>
+              ) : (
+                <Link
+                  className={styles.bookingsLink}
+                  href="/my-bookings"
+                >
+                  <span>My bookings</span>
+                  <span aria-hidden="true">→</span>
+                </Link>
               )}
-
-              <Link
-                className={styles.bookingsLink}
-                href="/my-bookings"
-              >
-                <span>My bookings</span>
-                <span aria-hidden="true">→</span>
-              </Link>
 
               <SignOutButton />
             </div>

@@ -1,0 +1,154 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.hero {
+  padding: 80px 0 90px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.eyebrow,
+.label {
+  color: var(--color-accent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin-top: 18px;
+  font-size: clamp(58px, 15vw, 92px);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.title span,
+.booking h2 span {
+  color: var(--color-accent);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.description {
+  max-width: 400px;
+  margin-top: 30px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+}
+
+.contactItem {
+  display: grid;
+  grid-template-columns: 35px 1fr;
+  gap: 20px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.contactItem > span {
+  color: var(--color-text-secondary);
+  font-size: 9px;
+}
+
+.contactItem h2 {
+  margin-top: 10px;
+  font-family: var(--font-heading);
+  font-size: 31px;
+  font-weight: 500;
+}
+
+.contactValue {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.hours {
+  margin-top: 15px;
+}
+
+.hours p {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 11px;
+}
+
+.hours span {
+  color: var(--color-text-secondary);
+}
+
+.hours strong {
+  font-weight: 500;
+}
+
+.booking {
+  padding: 90px 0;
+}
+
+.booking h2 {
+  display: flex;
+  flex-direction: column;
+  margin-top: 18px;
+  font-size: clamp(44px, 11vw, 70px);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.booking > p:not(.eyebrow) {
+  max-width: 390px;
+  margin-top: 25px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.bookingLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 330px;
+  min-height: 56px;
+  margin-top: 35px;
+  padding: 0 20px;
+  border-radius: 3px;
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+@media screen and (min-width: 768px) {
+  .page {
+    padding: 28px 32px;
+  }
+
+  .hero {
+    padding: 120px 0;
+  }
+
+  .contactItem {
+    grid-template-columns: 60px 1fr;
+    padding: 42px 0;
+  }
+
+  .contact {
+    max-width: 900px;
+    margin-left: auto;
+  }
+}

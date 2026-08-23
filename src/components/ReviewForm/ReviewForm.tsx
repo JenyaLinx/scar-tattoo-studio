@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
+import { createReview } from "@/services/reviews/reviews.client";
 import toast from "react-hot-toast";
 import {
   reviewSchema,
@@ -60,29 +61,35 @@ export default function ReviewForm({
     });
   };
 
-  const onSubmit = async (values: ReviewFormValues) => {
-    try {
-      console.log("Review:", {
-        artistId,
-        ...values,
-      });
+  const onSubmit = async (
+  values: ReviewFormValues,
+) => {
+  try {
+    await createReview({
+      artistId,
+      rating: values.rating,
+      comment: values.comment,
+    });
 
-      await new Promise((resolve) => {
-        window.setTimeout(resolve, 700);
-      });
+    toast.success(
+      `Your review for ${artistName} has been submitted.`,
+    );
 
-      toast.success(`Your review for ${artistName} has been submitted.`);
+    reset({
+      rating: 0,
+      comment: "",
+    });
 
-      reset({
-        rating: 0,
-        comment: "",
-      });
-
-      setHoveredRating(0);
-    } catch {
-      toast.error("Unable to submit your review. Please try again.");
-    }
+    setHoveredRating(0);
+  } catch (error) {
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Unable to submit your review. Please try again.",
+    );
+  }
   };
+  
 
   return (
     <form
@@ -199,9 +206,8 @@ export default function ReviewForm({
       </button>
 
       <p className={styles.notice}>
-        After authentication is connected, only registered clients will be
-        able to publish reviews.
-      </p>
+  Reviews are published after studio approval.
+</p>
     </form>
   );
 }

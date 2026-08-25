@@ -14,40 +14,35 @@ const adminSections = [
   {
     number: "01",
     title: "Bookings",
-    description:
-      "Manage consultation requests and booking statuses.",
+    description: "Manage consultation requests and booking statuses.",
     href: "/admin/bookings",
     active: true,
   },
   {
     number: "02",
     title: "Reviews",
-    description:
-      "Moderate client reviews before publication.",
+    description: "Moderate client reviews before publication.",
     href: "/admin/reviews",
     active: true,
   },
   {
     number: "03",
     title: "Gallery",
-    description:
-      "Manage gallery images and portfolio content.",
+    description: "Manage gallery images and portfolio content.",
     href: "#",
     active: false,
   },
   {
     number: "04",
     title: "Artists",
-    description:
-      "Manage artist profiles and portfolio details.",
-    href: "#",
-    active: false,
+    description: "Manage artist profiles and portfolio details.",
+    href: "/admin/artists",
+    active: true,
   },
   {
     number: "05",
     title: "Users",
-    description:
-      "Manage administrator access and user roles.",
+    description: "Manage administrator access and user roles.",
     href: "#",
     active: false,
   },
@@ -62,9 +57,7 @@ export default async function AdminPage() {
 
       <section className={styles.section}>
         <div className={styles.heading}>
-          <p className={styles.eyebrow}>
-            Administration
-          </p>
+          <p className={styles.eyebrow}>Administration</p>
 
           <h1 className={styles.title}>
             Admin
@@ -72,8 +65,7 @@ export default async function AdminPage() {
           </h1>
 
           <p className={styles.description}>
-            Manage bookings, reviews and studio
-            content from one place.
+            Manage bookings, reviews and studio content from one place.
           </p>
         </div>
 
@@ -86,23 +78,16 @@ export default async function AdminPage() {
                   href={section.href}
                   key={section.number}
                 >
-                  <span className={styles.number}>
-                    {section.number}
-                  </span>
+                  <span className={styles.number}>{section.number}</span>
 
                   <div className={styles.itemContent}>
                     <div>
                       <h2>{section.title}</h2>
 
-                      <p>
-                        {section.description}
-                      </p>
+                      <p>{section.description}</p>
                     </div>
 
-                    <span
-                      className={styles.arrow}
-                      aria-hidden="true"
-                    >
+                    <span className={styles.arrow} aria-hidden="true">
                       →
                     </span>
                   </div>
@@ -112,31 +97,17 @@ export default async function AdminPage() {
                   className={`${styles.item} ${styles.disabledItem}`}
                   key={section.number}
                 >
-                  <span className={styles.number}>
-                    {section.number}
-                  </span>
+                  <span className={styles.number}>{section.number}</span>
 
                   <div className={styles.itemContent}>
                     <div>
-                      <div
-                        className={
-                          styles.titleRow
-                        }
-                      >
+                      <div className={styles.titleRow}>
                         <h2>{section.title}</h2>
 
-                        <span
-                          className={
-                            styles.comingSoon
-                          }
-                        >
-                          Coming soon
-                        </span>
+                        <span className={styles.comingSoon}>Coming soon</span>
                       </div>
 
-                      <p>
-                        {section.description}
-                      </p>
+                      <p>{section.description}</p>
                     </div>
                   </div>
                 </div>

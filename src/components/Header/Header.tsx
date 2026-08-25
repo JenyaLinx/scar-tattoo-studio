@@ -155,12 +155,8 @@ export default function Header() {
   ? userRole === "admin"
     ? [
         {
-          label: "Admin bookings",
-          href: "/admin/bookings",
-        },
-        {
-          label: "Admin reviews",
-          href: "/admin/reviews",
+          label: "Admin panel",
+          href: "/admin",
         },
         {
           label: "Profile",

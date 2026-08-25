@@ -130,3 +130,89 @@ export async function getAllReviewsForAdmin(): Promise<
     };
   });
 }
+
+export type ArtistReview = {
+  id: number;
+  rating: number;
+  comment: string;
+  created_at: string;
+  author: string;
+};
+
+export async function getApprovedReviewsByArtistId(
+  artistId: number,
+): Promise<ArtistReview[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("reviews")
+    .select(`
+      id,
+      user_id,
+      rating,
+      comment,
+      created_at
+    `)
+    .eq("artist_id", artistId)
+    .eq("is_approved", true)
+    .order("created_at", {
+      ascending: false,
+    });
+
+  if (error) {
+    throw new Error(
+      `Failed to fetch artist reviews: ${error.message}`,
+    );
+  }
+
+  const reviews = data ?? [];
+
+  const userIds = [
+    ...new Set(
+      reviews.map((review) => review.user_id),
+    ),
+  ];
+
+  let profiles: {
+    id: string;
+    full_name: string | null;
+  }[] = [];
+
+  if (userIds.length > 0) {
+    const {
+      data: profileData,
+      error: profilesError,
+    } = await supabase
+      .from("profiles")
+      .select(`
+        id,
+        full_name
+      `)
+      .in("id", userIds);
+
+    if (profilesError) {
+      throw new Error(
+        `Failed to fetch review authors: ${profilesError.message}`,
+      );
+    }
+
+    profiles = profileData ?? [];
+  }
+
+  const profileMap = new Map(
+    profiles.map((profile) => [
+      profile.id,
+      profile.full_name,
+    ]),
+  );
+
+  return reviews.map((review) => ({
+    id: review.id,
+    rating: review.rating,
+    comment: review.comment,
+    created_at: review.created_at,
+    author:
+      profileMap.get(review.user_id) ??
+      "SCAR Client",
+  }));
+}

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header/Header";
 import ReviewForm from "@/components/ReviewForm/ReviewForm";
 import { getArtistBySlug } from "@/services/artists/artists.server";
-import { getReviewsByArtistId } from "@/data/reviews";
+import { getApprovedReviewsByArtistId } from "@/services/reviews/reviews.server";
 import styles from "./page.module.css";
 
 type ArtistPageProps = {
@@ -47,8 +47,8 @@ export default async function ArtistPage({
 
   // Reviews are still temporary.
   // We will move them to Supabase next.
-  const artistReviews =
-    getReviewsByArtistId(artist.id);
+const artistReviews =
+  await getApprovedReviewsByArtistId(artist.id);
 
   const averageRating =
     artistReviews.length > 0
@@ -265,10 +265,12 @@ export default async function ArtistPage({
                 </div>
 
                 <time
-                  className={styles.reviewDate}
-                >
-                  {review.date}
-                </time>
+  className={styles.reviewDate}
+>
+  {new Date(
+    review.created_at,
+  ).toLocaleDateString("en-GB")}
+</time>
               </div>
 
               <p

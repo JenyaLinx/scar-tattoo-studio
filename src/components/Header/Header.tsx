@@ -159,6 +159,10 @@ export default function Header() {
           href: "/admin/bookings",
         },
         {
+          label: "Admin reviews",
+          href: "/admin/reviews",
+        },
+        {
           label: "Profile",
           href: "/profile",
         },

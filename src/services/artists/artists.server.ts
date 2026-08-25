@@ -50,3 +50,44 @@ export async function getArtistBySlug(
 
   return data as ArtistWithImages | null;
 }
+
+export async function getAllArtistsForAdmin(): Promise<
+  Artist[]
+> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("artists")
+    .select("*")
+    .order("id", {
+      ascending: true,
+    });
+
+  if (error) {
+    throw new Error(
+      `Failed to fetch admin artists: ${error.message}`,
+    );
+  }
+
+  return data ?? [];
+}
+
+export async function getArtistByIdForAdmin(
+  id: number,
+): Promise<Artist | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("artists")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(
+      `Failed to fetch admin artist: ${error.message}`,
+    );
+  }
+
+  return data;
+}

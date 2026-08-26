@@ -1,0 +1,162 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 46px;
+  padding: 72px 0;
+}
+
+.eyebrow,
+.label {
+  color: var(--color-accent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  font-size: clamp(55px, 16vw, 76px);
+  font-weight: 500;
+  line-height: 0.88;
+}
+
+.title span {
+  color: var(--color-accent);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.description {
+  max-width: 340px;
+  margin-top: 24px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.content {
+  border-top: 1px solid var(--color-border);
+}
+
+.userCard {
+  padding: 30px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.number {
+  color: var(--color-text-secondary);
+  font-size: 9px;
+}
+
+.role {
+  padding: 4px 10px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.admin {
+  border-color: #ad4c4c;
+  color: #ad4c4c;
+}
+
+.client {
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.userInfo h2 {
+  margin-top: 8px;
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.email,
+.currentUser {
+  margin-top: 8px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+}
+
+.currentUser {
+  color: var(--color-accent);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.actions {
+  margin-top: 26px;
+}
+
+.actions form {
+  width: 100%;
+}
+
+.makeAdminButton,
+.removeAdminButton {
+  width: 100%;
+  min-height: 54px;
+  padding: 0 18px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.makeAdminButton {
+  border: 1px solid var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+}
+
+.removeAdminButton {
+  border: 1px solid #ad4c4c;
+  background: transparent;
+  color: #ad4c4c;
+}
+
+.empty {
+  padding: 55px 0;
+}
+
+@media screen and (min-width: 768px) {
+  .page {
+    padding: 28px 32px;
+  }
+
+  .section {
+    display: grid;
+    grid-template-columns: 0.75fr 1.25fr;
+    gap: 80px;
+    padding-top: 100px;
+  }
+
+  .content {
+    padding-left: 48px;
+    border-top: 0;
+    border-left: 1px solid var(--color-border);
+  }
+}

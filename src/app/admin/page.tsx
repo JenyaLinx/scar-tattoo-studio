@@ -43,8 +43,8 @@ const adminSections = [
     number: "05",
     title: "Users",
     description: "Manage administrator access and user roles.",
-    href: "#",
-    active: false,
+    href: "/admin/users",
+    active: true,
   },
 ];
 

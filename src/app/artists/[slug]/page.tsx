@@ -28,15 +28,11 @@ export async function generateMetadata({
 
   return {
     title: `${artist.name} | SCAR Tattoo Studio`,
-    description:
-      artist.description ??
-      `${artist.name} at SCAR Tattoo Studio`,
+    description: artist.description ?? `${artist.name} at SCAR Tattoo Studio`,
   };
 }
 
-export default async function ArtistPage({
-  params,
-}: ArtistPageProps) {
+export default async function ArtistPage({ params }: ArtistPageProps) {
   const { slug } = await params;
 
   const artist = await getArtistBySlug(slug);
@@ -47,16 +43,12 @@ export default async function ArtistPage({
 
   // Reviews are still temporary.
   // We will move them to Supabase next.
-const artistReviews =
-  await getApprovedReviewsByArtistId(artist.id);
+  const artistReviews = await getApprovedReviewsByArtistId(artist.id);
 
   const averageRating =
     artistReviews.length > 0
-      ? artistReviews.reduce(
-          (total, review) =>
-            total + review.rating,
-          0,
-        ) / artistReviews.length
+      ? artistReviews.reduce((total, review) => total + review.rating, 0) /
+        artistReviews.length
       : 0;
 
   return (
@@ -84,24 +76,16 @@ const artistReviews =
         </div>
 
         <div className={styles.content}>
-          <p className={styles.specialty}>
-            {artist.specialty} artist
-          </p>
+          <p className={styles.specialty}>{artist.specialty} artist</p>
 
-          <h1 className={styles.name}>
-            {artist.name}
-          </h1>
+          <h1 className={styles.name}>{artist.name}</h1>
 
           {artist.experience && (
-            <p className={styles.experience}>
-              {artist.experience}
-            </p>
+            <p className={styles.experience}>{artist.experience}</p>
           )}
 
           {artist.biography && (
-            <p className={styles.biography}>
-              {artist.biography}
-            </p>
+            <p className={styles.biography}>{artist.biography}</p>
           )}
 
           <div className={styles.actions}>
@@ -112,42 +96,30 @@ const artistReviews =
               Book consultation
             </Link>
 
-            <Link
-              className={styles.secondaryButton}
-              href="/artists"
-            >
+            <Link className={styles.secondaryButton} href="/artists">
               All artists
             </Link>
           </div>
 
           <div className={styles.socials}>
             {artist.instagram_url && (
-              <a
-                href={artist.instagram_url}
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href={artist.instagram_url} target="_blank" rel="noreferrer">
                 Instagram
+                <span aria-hidden="true">↗</span>
               </a>
             )}
 
             {artist.tiktok_url && (
-              <a
-                href={artist.tiktok_url}
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href={artist.tiktok_url} target="_blank" rel="noreferrer">
                 TikTok
+                <span aria-hidden="true">↗</span>
               </a>
             )}
 
             {artist.facebook_url && (
-              <a
-                href={artist.facebook_url}
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href={artist.facebook_url} target="_blank" rel="noreferrer">
                 Facebook
+                <span aria-hidden="true">↗</span>
               </a>
             )}
           </div>
@@ -157,40 +129,28 @@ const artistReviews =
       <section className={styles.portfolio}>
         <div className={styles.portfolioHeading}>
           <div>
-            <p className={styles.portfolioEyebrow}>
-              Selected work
-            </p>
+            <p className={styles.portfolioEyebrow}>Selected work</p>
 
-            <h2 className={styles.portfolioTitle}>
-              Artist portfolio
-            </h2>
+            <h2 className={styles.portfolioTitle}>Artist portfolio</h2>
           </div>
 
           <p className={styles.portfolioDescription}>
-            A selection of custom work created by{" "}
-            {artist.name}.
+            A selection of custom work created by {artist.name}.
           </p>
         </div>
 
         <div className={styles.gallery}>
-          {artist.artist_images.map(
-            (portfolioImage, index) => (
-              <div
-                className={styles.galleryItem}
-                key={portfolioImage.id}
-              >
-                <Image
-                  className={styles.galleryImage}
-                  src={portfolioImage.image_url}
-                  alt={`${artist.name} tattoo work ${
-                    index + 1
-                  }`}
-                  fill
-                  sizes="(max-width: 767px) 100vw, 50vw"
-                />
-              </div>
-            ),
-          )}
+          {artist.artist_images.map((portfolioImage, index) => (
+            <div className={styles.galleryItem} key={portfolioImage.id}>
+              <Image
+                className={styles.galleryImage}
+                src={portfolioImage.image_url}
+                alt={`${artist.name} tattoo work ${index + 1}`}
+                fill
+                sizes="(max-width: 767px) 100vw, 50vw"
+              />
+            </div>
+          ))}
         </div>
 
         <Link
@@ -205,13 +165,9 @@ const artistReviews =
       <section className={styles.reviews}>
         <div className={styles.reviewsHeading}>
           <div>
-            <p className={styles.portfolioEyebrow}>
-              Client reviews
-            </p>
+            <p className={styles.portfolioEyebrow}>Client reviews</p>
 
-            <h2 className={styles.portfolioTitle}>
-              What clients say
-            </h2>
+            <h2 className={styles.portfolioTitle}>What clients say</h2>
           </div>
 
           <div className={styles.ratingSummary}>
@@ -220,16 +176,9 @@ const artistReviews =
             </span>
 
             <div>
-              <p
-                className={styles.summaryStars}
-                aria-label="Average rating"
-              >
-                {"★".repeat(
-                  Math.round(averageRating),
-                )}
-                {"☆".repeat(
-                  5 - Math.round(averageRating),
-                )}
+              <p className={styles.summaryStars} aria-label="Average rating">
+                {"★".repeat(Math.round(averageRating))}
+                {"☆".repeat(5 - Math.round(averageRating))}
               </p>
 
               <p className={styles.reviewCount}>
@@ -241,81 +190,46 @@ const artistReviews =
 
         <div className={styles.reviewList}>
           {artistReviews.map((review) => (
-            <article
-              className={styles.reviewCard}
-              key={review.id}
-            >
+            <article className={styles.reviewCard} key={review.id}>
               <div className={styles.reviewTop}>
                 <div>
-                  <h3
-                    className={styles.reviewAuthor}
-                  >
-                    {review.author}
-                  </h3>
+                  <h3 className={styles.reviewAuthor}>{review.author}</h3>
 
                   <p
                     className={styles.reviewStars}
                     aria-label={`${review.rating} out of 5 stars`}
                   >
                     {"★".repeat(review.rating)}
-                    {"☆".repeat(
-                      5 - review.rating,
-                    )}
+                    {"☆".repeat(5 - review.rating)}
                   </p>
                 </div>
 
-                <time
-  className={styles.reviewDate}
->
-  {new Date(
-    review.created_at,
-  ).toLocaleDateString("en-GB")}
-</time>
+                <time className={styles.reviewDate}>
+                  {new Date(review.created_at).toLocaleDateString("en-GB")}
+                </time>
               </div>
 
-              <p
-                className={styles.reviewComment}
-              >
-                {review.comment}
-              </p>
+              <p className={styles.reviewComment}>{review.comment}</p>
 
-              <p className={styles.verified}>
-                Verified client
-              </p>
+              <p className={styles.verified}>Verified client</p>
             </article>
           ))}
         </div>
 
-        <div
-          className={styles.reviewFormWrapper}
-        >
-          <div
-            className={styles.reviewFormHeading}
-          >
-            <span className={styles.formNumber}>
-              01
-            </span>
+        <div className={styles.reviewFormWrapper}>
+          <div className={styles.reviewFormHeading}>
+            <span className={styles.formNumber}>01</span>
 
             <div>
-              <h3 className={styles.formTitle}>
-                Leave a review
-              </h3>
+              <h3 className={styles.formTitle}>Leave a review</h3>
 
-              <p
-                className={
-                  styles.formDescription
-                }
-              >
-                Share your experience with{" "}
-                {artist.name}.
+              <p className={styles.formDescription}>
+                Share your experience with {artist.name}.
               </p>
             </div>
           </div>
 
-          <ReviewForm
-            artistId={artist.id}
-            artistName={artist.name}
-          />
+          <ReviewForm artistId={artist.id} artistName={artist.name} />
         </div>
       </section>
     </main>

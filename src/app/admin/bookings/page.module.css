@@ -52,6 +52,53 @@
 .content {
   border-top: 1px solid var(--color-border);
 }
+.filters {
+  display: flex;
+  gap: 8px;
+  padding: 0 0 24px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--color-border);
+  scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filterLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 13px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-text-secondary);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.filterLink:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.filterActive {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+}
+
+.filterActive:hover {
+  color: var(--color-text-inverse);
+}
 
 .list {
   display: flex;
@@ -107,6 +154,12 @@
   border-color: #ad4c4c;
   background-color: rgba(173, 76, 76, 0.08);
   color: #ad4c4c;
+}
+
+.past {
+  border-color: var(--color-text-secondary);
+  background-color: transparent;
+  color: var(--color-text-secondary);
 }
 
 .client {

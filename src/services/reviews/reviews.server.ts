@@ -148,7 +148,6 @@ export async function getApprovedReviewsByArtistId(
     .from("reviews")
     .select(`
       id,
-      user_id,
       rating,
       comment,
       created_at
@@ -165,54 +164,11 @@ export async function getApprovedReviewsByArtistId(
     );
   }
 
-  const reviews = data ?? [];
-
-  const userIds = [
-    ...new Set(
-      reviews.map((review) => review.user_id),
-    ),
-  ];
-
-  let profiles: {
-    id: string;
-    full_name: string | null;
-  }[] = [];
-
-  if (userIds.length > 0) {
-    const {
-      data: profileData,
-      error: profilesError,
-    } = await supabase
-      .from("profiles")
-      .select(`
-        id,
-        full_name
-      `)
-      .in("id", userIds);
-
-    if (profilesError) {
-      throw new Error(
-        `Failed to fetch review authors: ${profilesError.message}`,
-      );
-    }
-
-    profiles = profileData ?? [];
-  }
-
-  const profileMap = new Map(
-    profiles.map((profile) => [
-      profile.id,
-      profile.full_name,
-    ]),
-  );
-
-  return reviews.map((review) => ({
+  return (data ?? []).map((review) => ({
     id: review.id,
     rating: review.rating,
     comment: review.comment,
     created_at: review.created_at,
-    author:
-      profileMap.get(review.user_id) ??
-      "SCAR Client",
+    author: "SCAR Client",
   }));
 }

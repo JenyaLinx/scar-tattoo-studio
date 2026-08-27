@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+
 import type { Artist } from "@/types/artist";
+
 import styles from "./ArtistCard.module.css";
 
 type ArtistCardProps = {
@@ -28,9 +30,7 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
         <div className={styles.overlay} />
 
         <div className={styles.imageContent}>
-          <span className={styles.specialty}>
-            {artist.specialty}
-          </span>
+          <span className={styles.specialty}>{artist.specialty}</span>
 
           <span className={styles.viewText}>
             View artist
@@ -44,9 +44,7 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
           <div>
             <h3 className={styles.name}>{artist.name}</h3>
 
-            <p className={styles.role}>
-              {artist.specialty} artist
-            </p>
+            <p className={styles.role}>{artist.specialty} artist</p>
           </div>
 
           <span className={styles.number}>
@@ -55,16 +53,11 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
         </div>
 
         {artist.description && (
-          <p className={styles.description}>
-            {artist.description}
-          </p>
+          <p className={styles.description}>{artist.description}</p>
         )}
 
         <div className={styles.footer}>
-          <Link
-            className={styles.profileLink}
-            href={`/artists/${artist.slug}`}
-          >
+          <Link className={styles.profileLink} href={`/artists/${artist.slug}`}>
             Explore work
             <span aria-hidden="true">→</span>
           </Link>
@@ -77,7 +70,8 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
                 rel="noreferrer"
                 aria-label={`${artist.name} on Instagram`}
               >
-                IG
+                Instagram
+                <span aria-hidden="true">↗</span>
               </a>
             )}
 
@@ -88,7 +82,8 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
                 rel="noreferrer"
                 aria-label={`${artist.name} on TikTok`}
               >
-                TT
+                TikTok
+                <span aria-hidden="true">↗</span>
               </a>
             )}
 
@@ -99,7 +94,8 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
                 rel="noreferrer"
                 aria-label={`${artist.name} on Facebook`}
               >
-                FB
+                Facebook
+                <span aria-hidden="true">↗</span>
               </a>
             )}
           </div>

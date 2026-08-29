@@ -16,12 +16,13 @@ export const metadata: Metadata = {
 type BookingPageProps = {
   searchParams: Promise<{
     artist?: string | string[];
+    giftCard?: string | string[];
   }>;
 };
 
-export default async function BookingPage({
-  searchParams,
-}: BookingPageProps) {
+const allowedGiftCards = [100, 200, 400, 500];
+
+export default async function BookingPage({ searchParams }: BookingPageProps) {
   const user = await getCurrentUser();
 
   const resolvedSearchParams = await searchParams;
@@ -31,14 +32,33 @@ export default async function BookingPage({
       ? resolvedSearchParams.artist
       : "";
 
-  if (!user) {
-    const bookingUrl = initialArtist
-      ? `/booking?artist=${encodeURIComponent(initialArtist)}`
-      : "/booking";
+  const giftCardParam =
+    typeof resolvedSearchParams.giftCard === "string"
+      ? resolvedSearchParams.giftCard
+      : "";
 
-    redirect(
-      `/sign-in?next=${encodeURIComponent(bookingUrl)}`,
-    );
+  const parsedGiftCard = Number(giftCardParam);
+
+  const giftCard = allowedGiftCards.includes(parsedGiftCard)
+    ? parsedGiftCard
+    : undefined;
+
+  if (!user) {
+    const params = new URLSearchParams();
+
+    if (initialArtist) {
+      params.set("artist", initialArtist);
+    }
+
+    if (giftCard) {
+      params.set("giftCard", String(giftCard));
+    }
+
+    const queryString = params.toString();
+
+    const bookingUrl = queryString ? `/booking?${queryString}` : "/booking";
+
+    redirect(`/sign-in?next=${encodeURIComponent(bookingUrl)}`);
   }
 
   return (
@@ -46,9 +66,7 @@ export default async function BookingPage({
       <Header />
 
       <section className={styles.hero}>
-        <p className={styles.eyebrow}>
-          Book a consultation
-        </p>
+        <p className={styles.eyebrow}>Book a consultation</p>
 
         <h1 className={styles.title}>
           Begin your
@@ -56,21 +74,17 @@ export default async function BookingPage({
         </h1>
 
         <p className={styles.description}>
-          Choose an artist and tell us when you would like to visit. The
-          studio will contact you to confirm the consultation.
+          Choose an artist and tell us when you would like to visit. The studio
+          will contact you to confirm the consultation.
         </p>
       </section>
 
       <section className={styles.bookingSection}>
         <div className={styles.sectionHeading}>
-          <span className={styles.stepNumber}>
-            01
-          </span>
+          <span className={styles.stepNumber}>01</span>
 
           <div>
-            <h2 className={styles.sectionTitle}>
-              Your request
-            </h2>
+            <h2 className={styles.sectionTitle}>Your request</h2>
 
             <p className={styles.sectionDescription}>
               Complete the form below. Fields marked with an asterisk are
@@ -79,13 +93,11 @@ export default async function BookingPage({
           </div>
         </div>
 
-        <BookingForm initialArtist={initialArtist} />
+        <BookingForm initialArtist={initialArtist} giftCard={giftCard} />
       </section>
 
       <section className={styles.process}>
-        <p className={styles.processEyebrow}>
-          What happens next
-        </p>
+        <p className={styles.processEyebrow}>What happens next</p>
 
         <div className={styles.processList}>
           <article className={styles.processItem}>
@@ -94,9 +106,7 @@ export default async function BookingPage({
             <div>
               <h3>Send your request</h3>
 
-              <p>
-                Select your artist, date and preferred consultation time.
-              </p>
+              <p>Select your artist, date and preferred consultation time.</p>
             </div>
           </article>
 
@@ -106,9 +116,7 @@ export default async function BookingPage({
             <div>
               <h3>We contact you</h3>
 
-              <p>
-                The studio confirms availability and discusses your idea.
-              </p>
+              <p>The studio confirms availability and discusses your idea.</p>
             </div>
           </article>
 
@@ -118,9 +126,7 @@ export default async function BookingPage({
             <div>
               <h3>Meet your artist</h3>
 
-              <p>
-                Visit the studio for your confirmed consultation.
-              </p>
+              <p>Visit the studio for your confirmed consultation.</p>
             </div>
           </article>
         </div>

@@ -183,3 +183,52 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+.giftCardNotice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 18px 20px;
+  border: 1px solid var(--color-accent);
+  border-radius: 3px;
+
+  background-color: var(--color-surface);
+}
+
+.giftCardLabel {
+  display: block;
+
+  color: var(--color-accent);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.giftCardValue {
+  display: block;
+  margin-top: 5px;
+
+  color: var(--color-text-primary);
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.giftCardMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  border: 1px solid var(--color-accent);
+  border-radius: 50%;
+
+  color: var(--color-accent);
+  font-size: 12px;
+}

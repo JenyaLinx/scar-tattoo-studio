@@ -14,10 +14,6 @@ type UserRole = "client" | "admin";
 
 const navigationLinks = [
   {
-    label: "Home",
-    href: "/",
-  },
-  {
     label: "Artists",
     href: "/artists",
   },
@@ -28,6 +24,10 @@ const navigationLinks = [
   {
     label: "Booking",
     href: "/booking",
+  },
+  {
+    label: "Gift Cards",
+    href: "/gift-cards",
   },
   {
     label: "About",
@@ -42,17 +42,13 @@ const navigationLinks = [
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [userRole, setUserRole] =
-    useState<UserRole | null>(null);
-  const [isAuthLoading, setIsAuthLoading] =
-    useState(true);
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
     const supabase = createClient();
 
-    const loadRole = async (
-      currentUser: User | null,
-    ) => {
+    const loadRole = async (currentUser: User | null) => {
       if (!currentUser) {
         setUserRole(null);
         return;
@@ -65,20 +61,13 @@ export default function Header() {
         .maybeSingle();
 
       if (error) {
-        console.error(
-          "Unable to load user role:",
-          error,
-        );
+        console.error("Unable to load user role:", error);
 
         setUserRole(null);
         return;
       }
 
-      setUserRole(
-        data?.role === "admin"
-          ? "admin"
-          : "client",
-      );
+      setUserRole(data?.role === "admin" ? "admin" : "client");
     };
 
     const loadUser = async () => {
@@ -97,18 +86,15 @@ export default function Header() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        const currentUser =
-          session?.user ?? null;
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const currentUser = session?.user ?? null;
 
-        setUser(currentUser);
+      setUser(currentUser);
 
-        void loadRole(currentUser).finally(() => {
-          setIsAuthLoading(false);
-        });
-      },
-    );
+      void loadRole(currentUser).finally(() => {
+        setIsAuthLoading(false);
+      });
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -116,9 +102,7 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen
-      ? "hidden"
-      : "";
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
 
     return () => {
       document.body.style.overflow = "";
@@ -144,50 +128,44 @@ export default function Header() {
 
       window.location.href = "/";
     } catch (error) {
-      console.error(
-        "Unable to sign out:",
-        error,
-      );
+      console.error("Unable to sign out:", error);
     }
   };
 
   const accountLinks = user
-  ? userRole === "admin"
-    ? [
-        {
-          label: "Admin panel",
-          href: "/admin",
-        },
-        {
-          label: "Profile",
-          href: "/profile",
-        },
-      ]
+    ? userRole === "admin"
+      ? [
+          {
+            label: "Admin panel",
+            href: "/admin",
+          },
+          {
+            label: "Profile",
+            href: "/profile",
+          },
+        ]
+      : [
+          {
+            label: "My bookings",
+            href: "/my-bookings",
+          },
+          {
+            label: "Profile",
+            href: "/profile",
+          },
+        ]
     : [
         {
-          label: "My bookings",
-          href: "/my-bookings",
+          label: "Sign in",
+          href: "/sign-in",
         },
         {
-          label: "Profile",
-          href: "/profile",
+          label: "Create account",
+          href: "/sign-up",
         },
-      ]
-  : [
-      {
-        label: "Sign in",
-        href: "/sign-in",
-      },
-      {
-        label: "Create account",
-        href: "/sign-up",
-      },
-    ];
-  
-  const allNavigationLinks = [
-    ...navigationLinks,
-    ...accountLinks,
-  ];
+      ];
+
+  const allNavigationLinks = [...navigationLinks, ...accountLinks];
 
   return (
     <header className={styles.header}>
@@ -198,13 +176,9 @@ export default function Header() {
           onClick={closeMenu}
           aria-label="SCAR Tattoo Studio home page"
         >
-          <span className={styles.logoMain}>
-            SCAR
-          </span>
+          <span className={styles.logoMain}>SCAR</span>
 
-          <span className={styles.logoSmall}>
-            Tattoo Studio
-          </span>
+          <span className={styles.logoSmall}>Tattoo Studio</span>
         </Link>
 
         <div className={styles.controls}>
@@ -212,16 +186,12 @@ export default function Header() {
 
           <button
             className={`${styles.menuButton} ${
-              isMenuOpen
-                ? styles.menuButtonOpen
-                : ""
+              isMenuOpen ? styles.menuButtonOpen : ""
             }`}
             type="button"
             onClick={toggleMenu}
             aria-label={
-              isMenuOpen
-                ? "Close navigation menu"
-                : "Open navigation menu"
+              isMenuOpen ? "Close navigation menu" : "Open navigation menu"
             }
             aria-expanded={isMenuOpen}
             aria-controls="mobile-navigation"
@@ -234,9 +204,7 @@ export default function Header() {
 
       <div
         className={`${styles.menuOverlay} ${
-          isMenuOpen
-            ? styles.menuOverlayOpen
-            : ""
+          isMenuOpen ? styles.menuOverlayOpen : ""
         }`}
         aria-hidden={!isMenuOpen}
       >
@@ -247,46 +215,30 @@ export default function Header() {
         >
           {!isAuthLoading && (
             <ul className={styles.navigationList}>
-              {allNavigationLinks.map(
-                (link, index) => (
-                  <li
-                    className={
-                      styles.navigationItem
-                    }
-                    key={link.href}
-                    style={
-                      {
-                        "--navigation-delay": `${index * 45}ms`,
-                      } as React.CSSProperties
-                    }
+              {allNavigationLinks.map((link, index) => (
+                <li
+                  className={styles.navigationItem}
+                  key={link.href}
+                  style={
+                    {
+                      "--navigation-delay": `${index * 45}ms`,
+                    } as React.CSSProperties
+                  }
+                >
+                  <Link
+                    className={styles.navigationLink}
+                    href={link.href}
+                    onClick={closeMenu}
+                    tabIndex={isMenuOpen ? 0 : -1}
                   >
-                    <Link
-                      className={
-                        styles.navigationLink
-                      }
-                      href={link.href}
-                      onClick={closeMenu}
-                      tabIndex={
-                        isMenuOpen ? 0 : -1
-                      }
-                    >
-                      <span
-                        className={
-                          styles.navigationNumber
-                        }
-                      >
-                        {String(
-                          index + 1,
-                        ).padStart(2, "0")}
-                      </span>
+                    <span className={styles.navigationNumber}>
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
 
-                      <span>
-                        {link.label}
-                      </span>
-                    </Link>
-                  </li>
-                ),
-              )}
+                    <span>{link.label}</span>
+                  </Link>
+                </li>
+              ))}
             </ul>
           )}
 
@@ -302,14 +254,10 @@ export default function Header() {
 
             {user && (
               <button
-                className={
-                  styles.signOutButton
-                }
+                className={styles.signOutButton}
                 type="button"
                 onClick={handleSignOut}
-                tabIndex={
-                  isMenuOpen ? 0 : -1
-                }
+                tabIndex={isMenuOpen ? 0 : -1}
               >
                 Sign out
               </button>
@@ -317,25 +265,16 @@ export default function Header() {
           </div>
 
           <div className={styles.menuFooter}>
-            <p
-              className={
-                styles.menuFooterText
-              }
-            >
-              Custom tattoos created with
-              precision, character and care.
+            <p className={styles.menuFooterText}>
+              Custom tattoos created with precision, character and care.
             </p>
 
-            <div
-              className={styles.socialLinks}
-            >
+            <div className={styles.socialLinks}>
               <a
                 href="https://www.instagram.com/"
                 target="_blank"
                 rel="noreferrer"
-                tabIndex={
-                  isMenuOpen ? 0 : -1
-                }
+                tabIndex={isMenuOpen ? 0 : -1}
               >
                 Instagram
               </a>
@@ -344,9 +283,7 @@ export default function Header() {
                 href="https://www.tiktok.com/"
                 target="_blank"
                 rel="noreferrer"
-                tabIndex={
-                  isMenuOpen ? 0 : -1
-                }
+                tabIndex={isMenuOpen ? 0 : -1}
               >
                 TikTok
               </a>
@@ -355,9 +292,7 @@ export default function Header() {
                 href="https://www.facebook.com/"
                 target="_blank"
                 rel="noreferrer"
-                tabIndex={
-                  isMenuOpen ? 0 : -1
-                }
+                tabIndex={isMenuOpen ? 0 : -1}
               >
                 Facebook
               </a>

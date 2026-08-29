@@ -19,13 +19,15 @@
 
 .image {
   object-fit: cover;
+  transform: scale(1.02);
+
   transition:
     opacity var(--transition-default),
     transform var(--transition-default);
 }
 
 .imageLink:hover .image {
-  transform: scale(1.025);
+  transform: scale(1.100);
 }
 
 .content {
@@ -55,11 +57,13 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
+
   color: var(--color-text-primary);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+
   transition:
     color var(--transition-fast),
     transform var(--transition-fast);

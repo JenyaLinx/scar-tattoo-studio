@@ -399,3 +399,28 @@
   font-size: 11px;
   line-height: 1.65;
 }
+
+.reviewsUnavailable,
+.reviewsEmpty {
+  margin-top: 28px;
+  padding: 22px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.reviewsUnavailable span {
+  color: var(--color-accent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.reviewsUnavailable p,
+.reviewsEmpty p {
+  max-width: 480px;
+  margin-top: 10px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.7;
+}

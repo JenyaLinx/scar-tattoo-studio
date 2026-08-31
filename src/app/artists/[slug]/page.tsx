@@ -2,10 +2,15 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
 import Header from "@/components/Header/Header";
 import ReviewForm from "@/components/ReviewForm/ReviewForm";
 import { getArtistBySlug } from "@/services/artists/artists.server";
-import { getApprovedReviewsByArtistId } from "@/services/reviews/reviews.server";
+import {
+  getApprovedReviewsByArtistId,
+  type ArtistReview,
+} from "@/services/reviews/reviews.server";
+
 import styles from "./page.module.css";
 
 type ArtistPageProps = {
@@ -41,9 +46,16 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
     notFound();
   }
 
-  // Reviews are still temporary.
-  // We will move them to Supabase next.
-  const artistReviews = await getApprovedReviewsByArtistId(artist.id);
+  let artistReviews: ArtistReview[] = [];
+  let reviewsUnavailable = false;
+
+  try {
+    artistReviews = await getApprovedReviewsByArtistId(artist.id);
+  } catch (error) {
+    console.error("Unable to load artist reviews:", error);
+
+    reviewsUnavailable = true;
+  }
 
   const averageRating =
     artistReviews.length > 0
@@ -170,51 +182,74 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
             <h2 className={styles.portfolioTitle}>What clients say</h2>
           </div>
 
-          <div className={styles.ratingSummary}>
-            <span className={styles.averageRating}>
-              {averageRating.toFixed(1)}
-            </span>
+          {!reviewsUnavailable && (
+            <div className={styles.ratingSummary}>
+              <span className={styles.averageRating}>
+                {averageRating.toFixed(1)}
+              </span>
 
-            <div>
-              <p className={styles.summaryStars} aria-label="Average rating">
-                {"★".repeat(Math.round(averageRating))}
-                {"☆".repeat(5 - Math.round(averageRating))}
-              </p>
+              <div>
+                <p className={styles.summaryStars} aria-label="Average rating">
+                  {"★".repeat(Math.round(averageRating))}
 
-              <p className={styles.reviewCount}>
-                {artistReviews.length} reviews
-              </p>
+                  {"☆".repeat(5 - Math.round(averageRating))}
+                </p>
+
+                <p className={styles.reviewCount}>
+                  {artistReviews.length}{" "}
+                  {artistReviews.length === 1 ? "review" : "reviews"}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
-        <div className={styles.reviewList}>
-          {artistReviews.map((review) => (
-            <article className={styles.reviewCard} key={review.id}>
-              <div className={styles.reviewTop}>
-                <div>
-                  <h3 className={styles.reviewAuthor}>{review.author}</h3>
+        {reviewsUnavailable ? (
+          <div className={styles.reviewsUnavailable}>
+            <span>Reviews</span>
 
-                  <p
-                    className={styles.reviewStars}
-                    aria-label={`${review.rating} out of 5 stars`}
+            <p>Reviews are temporarily unavailable. Please try again later.</p>
+          </div>
+        ) : artistReviews.length === 0 ? (
+          <div className={styles.reviewsEmpty}>
+            <p>
+              No reviews yet. Be the first to share your experience with{" "}
+              {artist.name}.
+            </p>
+          </div>
+        ) : (
+          <div className={styles.reviewList}>
+            {artistReviews.map((review) => (
+              <article className={styles.reviewCard} key={review.id}>
+                <div className={styles.reviewTop}>
+                  <div>
+                    <h3 className={styles.reviewAuthor}>{review.author}</h3>
+
+                    <p
+                      className={styles.reviewStars}
+                      aria-label={`${review.rating} out of 5 stars`}
+                    >
+                      {"★".repeat(review.rating)}
+
+                      {"☆".repeat(5 - review.rating)}
+                    </p>
+                  </div>
+
+                  <time
+                    className={styles.reviewDate}
+                    dateTime={review.created_at}
                   >
-                    {"★".repeat(review.rating)}
-                    {"☆".repeat(5 - review.rating)}
-                  </p>
+                    {new Date(review.created_at).toLocaleDateString("en-GB")}
+                  </time>
                 </div>
 
-                <time className={styles.reviewDate}>
-                  {new Date(review.created_at).toLocaleDateString("en-GB")}
-                </time>
-              </div>
+                <p className={styles.reviewComment}>{review.comment}</p>
 
-              <p className={styles.reviewComment}>{review.comment}</p>
-
-              <p className={styles.verified}>Verified client</p>
-            </article>
-          ))}
-        </div>
+                <p className={styles.verified}>Verified client</p>
+              </article>
+            ))}
+          </div>
+        )}
 
         <div className={styles.reviewFormWrapper}>
           <div className={styles.reviewFormHeading}>

@@ -1,0 +1,80 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  max-width: 620px;
+  padding: 120px 0 80px;
+}
+
+.eyebrow {
+  color: var(--color-accent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin-top: 18px;
+
+  font-size: clamp(58px, 14vw, 90px);
+  font-weight: 500;
+  line-height: 0.88;
+  letter-spacing: -0.05em;
+}
+
+.title span {
+  color: var(--color-accent);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.description {
+  max-width: 420px;
+  margin-top: 28px;
+
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: min(100%, 320px);
+  min-height: 56px;
+  margin-top: 34px;
+  padding: 0 18px;
+
+  border: 0;
+  border-radius: 3px;
+
+  background-color: var(--color-accent);
+  color: var(--color-text-inverse);
+
+  cursor: pointer;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.button:hover {
+  background-color: var(--color-accent-hover);
+}
+
+@media screen and (min-width: 480px) {
+  .page {
+    padding: 28px 32px;
+  }
+}

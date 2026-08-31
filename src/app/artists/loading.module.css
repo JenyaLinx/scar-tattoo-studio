@@ -1,0 +1,185 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.hero {
+  padding: 72px 0 54px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.eyebrow,
+.title span,
+.description span,
+.image,
+.name,
+.role,
+.text span,
+.link {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-surface);
+}
+
+.eyebrow::after,
+.title span::after,
+.description span::after,
+.image::after,
+.name::after,
+.role::after,
+.text span::after,
+.link::after {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(180, 138, 99, 0.12),
+    transparent
+  );
+
+  content: "";
+  transform: translateX(-100%);
+  animation: shimmer 1.6s infinite;
+}
+
+.eyebrow {
+  width: 110px;
+  height: 9px;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.title span:first-child {
+  width: min(540px, 85%);
+  height: 56px;
+}
+
+.title span:last-child {
+  width: min(380px, 70%);
+  height: 56px;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.description span {
+  width: min(440px, 100%);
+  height: 11px;
+}
+
+.description span:last-child {
+  width: min(300px, 75%);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 42px;
+  padding: 36px 0 80px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 3px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  width: 55%;
+  height: 31px;
+}
+
+.role {
+  width: 28%;
+  height: 10px;
+  margin-top: 10px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 20px;
+}
+
+.text span {
+  width: 90%;
+  height: 10px;
+}
+
+.text span:last-child {
+  width: 65%;
+}
+
+.link {
+  width: 110px;
+  height: 12px;
+  margin-top: 24px;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media screen and (min-width: 480px) {
+  .page {
+    padding: 28px 32px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .hero {
+    padding-top: 100px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(
+      3,
+      minmax(0, 1fr)
+    );
+    gap: 28px;
+  }
+
+  .title span:first-child,
+  .title span:last-child {
+    height: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow::after,
+  .title span::after,
+  .description span::after,
+  .image::after,
+  .name::after,
+  .role::after,
+  .text span::after,
+  .link::after {
+    animation: none;
+  }
+}

@@ -1,0 +1,257 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--color-background);
+}
+
+.hero {
+  padding: 160px 24px 70px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.eyebrow,
+.title,
+.description,
+.sectionLabel,
+.count,
+.number,
+.status,
+.smallLabel,
+.artistName,
+.specialty,
+.detailLabel,
+.detailValue,
+.detailValueSmall,
+.messageLine,
+.messageLineShort,
+.artistLink {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-surface);
+}
+
+.eyebrow::after,
+.title::after,
+.description::after,
+.sectionLabel::after,
+.count::after,
+.number::after,
+.status::after,
+.smallLabel::after,
+.artistName::after,
+.specialty::after,
+.detailLabel::after,
+.detailValue::after,
+.detailValueSmall::after,
+.messageLine::after,
+.messageLineShort::after,
+.artistLink::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(180, 138, 99, 0.12),
+    transparent
+  );
+
+  transform: translateX(-100%);
+  animation: shimmer 1.6s infinite;
+}
+
+.eyebrow {
+  width: 110px;
+  height: 9px;
+}
+
+.title {
+  width: min(500px, 85%);
+  height: 62px;
+  margin-top: 22px;
+}
+
+.description {
+  width: min(440px, 90%);
+  height: 12px;
+  margin-top: 24px;
+}
+
+.bookings {
+  padding: 0 24px 80px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 28px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sectionLabel {
+  width: 130px;
+  height: 9px;
+}
+
+.count {
+  width: 60px;
+  height: 9px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking {
+  padding: 42px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.bookingTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.number {
+  width: 22px;
+  height: 9px;
+}
+
+.status {
+  width: 92px;
+  height: 30px;
+  border-radius: 999px;
+}
+
+.artist {
+  margin-top: 50px;
+}
+
+.smallLabel {
+  width: 90px;
+  height: 8px;
+}
+
+.artistName {
+  width: min(300px, 70%);
+  height: 42px;
+  margin-top: 18px;
+}
+
+.specialty {
+  width: 90px;
+  height: 10px;
+  margin-top: 12px;
+}
+
+.details {
+  margin-top: 46px;
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.detailLabel {
+  width: 55px;
+  height: 9px;
+}
+
+.detailValue {
+  width: 120px;
+  height: 10px;
+}
+
+.detailValueSmall {
+  width: 55px;
+  height: 10px;
+}
+
+.message {
+  margin-top: 34px;
+  padding: 24px;
+
+  background-color: var(--color-surface);
+}
+
+.message .smallLabel {
+  background-color: var(--color-background);
+}
+
+.messageLine,
+.messageLineShort {
+  height: 10px;
+  margin-top: 20px;
+  background-color: var(--color-background);
+}
+
+.messageLine {
+  width: 90%;
+}
+
+.messageLineShort {
+  width: 62%;
+  margin-top: 9px;
+}
+
+.artistLink {
+  width: 110px;
+  height: 11px;
+  margin-top: 32px;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .hero {
+    padding-right: 7%;
+    padding-left: 7%;
+  }
+
+  .bookings {
+    width: 55%;
+    margin-left: auto;
+    padding-right: 7%;
+    padding-left: 40px;
+
+    border-left: 1px solid var(--color-border);
+  }
+
+  .booking {
+    padding: 48px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow::after,
+  .title::after,
+  .description::after,
+  .sectionLabel::after,
+  .count::after,
+  .number::after,
+  .status::after,
+  .smallLabel::after,
+  .artistName::after,
+  .specialty::after,
+  .detailLabel::after,
+  .detailValue::after,
+  .detailValueSmall::after,
+  .messageLine::after,
+  .messageLineShort::after,
+  .artistLink::after {
+    animation: none;
+  }
+}

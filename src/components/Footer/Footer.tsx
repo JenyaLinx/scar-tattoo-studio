@@ -11,10 +11,7 @@ export default function Footer() {
             +44 00 0000 000
           </a>
 
-          <a
-            className={styles.link}
-            href="mailto:mail@scartattoo.co.uk"
-          >
+          <a className={styles.link} href="mailto:mail@scartattoo.co.uk">
             Mail @ ScarTattoo
           </a>
         </div>
@@ -35,8 +32,15 @@ export default function Footer() {
       </div>
 
       <div className={styles.bottom}>
-        <p>© 2026 SCAR Tattoo Studio.</p>
-        <p>All rights reserved.</p>
+        <div className={styles.copyright}>
+          <p>© 2026 SCAR Tattoo Studio.</p>
+          <p>All rights reserved.</p>
+        </div>
+
+        <p className={styles.credit}>
+          Designed &amp; developed by{" "}
+          <a href="https://oliinyk-portfolio-web.netlify.app/">Yevhenii O.</a>
+        </p>
       </div>
     </footer>
   );

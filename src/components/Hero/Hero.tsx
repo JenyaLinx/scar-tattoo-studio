@@ -16,7 +16,15 @@ export default function Hero() {
 
         <p className={styles.description}>
           Custom tattoos created by experienced artists with precision,
-          character and care.
+          character and care. Every design is developed around your ideas,
+          personality and individual style, making each piece completely unique
+          to you. From delicate fine-line work to bold statement tattoos, our
+          artists focus on every detail to create something meaningful and
+          timeless. We believe a tattoo should be more than just an image — it
+          should tell your story and feel like a natural part of who you are. At
+          SCAR Tattoo Studio, we combine creativity, experience and a personal
+          approach to bring your vision to life and create art that stays with
+          you.
         </p>
 
         <div className={styles.actions}>

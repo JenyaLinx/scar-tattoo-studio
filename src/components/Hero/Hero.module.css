@@ -111,6 +111,24 @@
 .image {
   object-fit: cover;
   object-position: center;
+
+  transition: opacity var(--transition-default);
+}
+
+.lightImage {
+  opacity: 1;
+}
+
+.darkImage {
+  opacity: 0;
+}
+
+:global(html[data-theme="dark"]) .lightImage {
+  opacity: 0;
+}
+
+:global(html[data-theme="dark"]) .darkImage {
+  opacity: 1;
 }
 
 .imageOverlay {

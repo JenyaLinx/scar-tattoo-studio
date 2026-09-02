@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 
@@ -40,6 +41,8 @@ const navigationLinks = [
 ];
 
 export default function Header() {
+  const pathname = usePathname();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
@@ -117,6 +120,19 @@ export default function Header() {
     setIsMenuOpen((currentState) => !currentState);
   };
 
+  const handleLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    closeMenu();
+
+    if (pathname === "/") {
+      event.preventDefault();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       await signOut();
@@ -173,7 +189,7 @@ export default function Header() {
         <Link
           className={styles.logo}
           href="/"
-          onClick={closeMenu}
+          onClick={handleLogoClick}
           aria-label="SCAR Tattoo Studio home page"
         >
           <span className={styles.logoMain}>SCAR</span>

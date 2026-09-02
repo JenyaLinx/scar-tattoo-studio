@@ -26,6 +26,7 @@
 .overlay {
   position: absolute;
   inset: 0;
+
   background:
     linear-gradient(
       180deg,
@@ -39,10 +40,12 @@
   right: 18px;
   bottom: 18px;
   left: 18px;
+
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
+
   color: #fffaf4;
 }
 
@@ -56,6 +59,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
+
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -83,6 +87,7 @@
 
 .role {
   margin-top: 7px;
+
   color: var(--color-accent);
   font-size: 9px;
   font-weight: 700;
@@ -92,6 +97,7 @@
 
 .number {
   padding-top: 4px;
+
   color: var(--color-text-secondary);
   font-size: 9px;
   font-weight: 700;
@@ -101,6 +107,7 @@
 .description {
   max-width: 340px;
   margin-top: 18px;
+
   color: var(--color-text-secondary);
   font-size: 12px;
   line-height: 1.75;
@@ -108,9 +115,10 @@
 
 .footer {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+
   margin-top: 24px;
 }
 
@@ -118,10 +126,12 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
+
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+
   transition:
     color var(--transition-fast),
     gap var(--transition-fast);
@@ -134,15 +144,11 @@
 
 .socials {
   display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.socials {
-  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-  margin-top: 28px;
+
+  width: 100%;
 }
 
 .socials a {
@@ -157,7 +163,6 @@
   border-radius: 999px;
 
   color: var(--color-text-secondary);
-
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -171,15 +176,18 @@
 }
 
 .socials a:hover {
-  color: var(--color-text-primary);
   border-color: var(--color-accent);
   background-color: rgba(190, 145, 105, 0.08);
+  color: var(--color-text-primary);
+
   transform: translateY(-2px);
 }
 
 .socials a span {
   margin-left: 7px;
+
   font-size: 11px;
+
   transition: transform var(--transition-fast);
 }
 
@@ -192,4 +200,16 @@
 .socials a:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
+}
+
+@media screen and (min-width: 768px) {
+  .footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .socials {
+    width: auto;
+  }
 }

@@ -1,0 +1,271 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 46px;
+  padding: 72px 0;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+}
+
+.eyebrow,
+.label,
+.countLabel {
+  color: var(--color-accent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+
+  margin-top: 15px;
+
+  font-size: clamp(55px, 16vw, 76px);
+  font-weight: 500;
+  line-height: 0.88;
+  letter-spacing: -0.05em;
+}
+
+.title span {
+  color: var(--color-accent);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.description {
+  max-width: 340px;
+  margin-top: 24px;
+
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.content {
+  border-top: 1px solid var(--color-border);
+}
+
+.topBar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+
+  padding: 24px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.count {
+  margin-top: 6px;
+
+  font-family: var(--font-heading);
+  font-size: 32px;
+  line-height: 1;
+}
+
+.publicLink,
+.artistLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+
+  color: var(--color-text-primary);
+
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+
+  transition:
+    color var(--transition-fast),
+    gap var(--transition-fast);
+}
+
+.publicLink:hover,
+.artistLink:hover {
+  gap: 18px;
+  color: var(--color-accent);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+
+  padding-top: 30px;
+}
+
+.card {
+  min-width: 0;
+  padding-bottom: 30px;
+
+  border-bottom: 1px solid var(--color-border);
+}
+
+.imageWrapper {
+  position: relative;
+
+  width: 100%;
+  aspect-ratio: 4 / 5;
+
+  overflow: hidden;
+
+  background-color: var(--color-surface);
+}
+
+.image {
+  object-fit: cover;
+
+  transition: transform 500ms ease;
+}
+
+.card:hover .image {
+  transform: scale(1.025);
+}
+
+.imageNumber {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 30px;
+  height: 30px;
+
+  border-radius: 50%;
+
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.cardInfo {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding-top: 18px;
+}
+
+.artistName {
+  margin-top: 7px;
+
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.specialty {
+  margin-top: 7px;
+
+  color: var(--color-text-secondary);
+  font-size: 10px;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+
+  color: var(--color-text-secondary);
+
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.meta strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.artistLink {
+  margin-top: 18px;
+}
+
+.empty {
+  padding: 55px 0;
+}
+
+.empty span {
+  color: var(--color-accent);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+}
+
+.empty h2 {
+  margin-top: 16px;
+
+  font-family: var(--font-heading);
+  font-size: 38px;
+  font-weight: 500;
+}
+
+.empty p {
+  margin-top: 12px;
+
+  color: var(--color-text-secondary);
+  font-size: 11px;
+}
+
+@media screen and (min-width: 480px) {
+  .page {
+    padding: 28px 32px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .section {
+    display: grid;
+    grid-template-columns: 0.75fr 1.25fr;
+    gap: 80px;
+
+    padding-top: 100px;
+  }
+
+  .content {
+    padding-left: 48px;
+
+    border-top: 0;
+    border-left: 1px solid var(--color-border);
+  }
+
+  .grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+
+    gap: 50px 24px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .grid {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
+  }
+}

@@ -29,8 +29,8 @@ const adminSections = [
     number: "03",
     title: "Gallery",
     description: "Manage gallery images and portfolio content.",
-    href: "#",
-    active: false,
+    href: "/admin/gallery",
+    active: true,
   },
   {
     number: "04",

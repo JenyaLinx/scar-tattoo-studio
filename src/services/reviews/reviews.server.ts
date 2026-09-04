@@ -38,6 +38,19 @@ export type AdminReview = {
   client: ReviewClient | null;
 };
 
+export type ArtistReview = {
+  id: number;
+  rating: number;
+  comment: string;
+  created_at: string;
+  author: string;
+};
+
+export type ArtistRatingSummary = {
+  average: number;
+  count: number;
+};
+
 export async function getAllReviewsForAdmin(): Promise<
   AdminReview[]
 > {
@@ -131,14 +144,6 @@ export async function getAllReviewsForAdmin(): Promise<
   });
 }
 
-export type ArtistReview = {
-  id: number;
-  rating: number;
-  comment: string;
-  created_at: string;
-  author: string;
-};
-
 export async function getApprovedReviewsByArtistId(
   artistId: number,
 ): Promise<ArtistReview[]> {
@@ -171,4 +176,41 @@ export async function getApprovedReviewsByArtistId(
     created_at: review.created_at,
     author: "SCAR Client",
   }));
+}
+
+export async function getArtistRatingSummary(
+  artistId: number,
+): Promise<ArtistRatingSummary> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("rating")
+    .eq("artist_id", artistId)
+    .eq("is_approved", true);
+
+  if (error) {
+    throw new Error(
+      `Failed to fetch artist rating: ${error.message}`,
+    );
+  }
+
+  const ratings = data ?? [];
+
+  if (ratings.length === 0) {
+    return {
+      average: 0,
+      count: 0,
+    };
+  }
+
+  const total = ratings.reduce(
+    (sum, review) => sum + review.rating,
+    0,
+  );
+
+  return {
+    average: total / ratings.length,
+    count: ratings.length,
+  };
 }

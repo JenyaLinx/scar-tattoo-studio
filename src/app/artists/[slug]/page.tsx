@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header/Header";
 import ReviewForm from "@/components/ReviewForm/ReviewForm";
 import { getArtistBySlug } from "@/services/artists/artists.server";
+import { getCurrentUser } from "@/services/auth/auth.server";
 import {
   getApprovedReviewsByArtistId,
   type ArtistReview,
@@ -45,6 +46,8 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
   if (!artist) {
     notFound();
   }
+
+  const user = await getCurrentUser();
 
   let artistReviews: ArtistReview[] = [];
   let reviewsUnavailable = false;
@@ -174,7 +177,7 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
         </Link>
       </section>
 
-      <section className={styles.reviews}>
+      <section className={styles.reviews} id="reviews">
         <div className={styles.reviewsHeading}>
           <div>
             <p className={styles.portfolioEyebrow}>Client reviews</p>
@@ -264,7 +267,23 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
             </div>
           </div>
 
-          <ReviewForm artistId={artist.id} artistName={artist.name} />
+          {user ? (
+            <ReviewForm artistId={artist.id} artistName={artist.name} />
+          ) : (
+            <div className={styles.reviewLogin}>
+              <p>Sign in to share your experience with {artist.name}.</p>
+
+              <Link
+                className={styles.reviewLoginLink}
+                href={`/sign-in?next=${encodeURIComponent(
+                  `/artists/${artist.slug}#reviews`,
+                )}`}
+              >
+                Sign in to leave a review
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+          )}
         </div>
       </section>
     </main>

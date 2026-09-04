@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { Artist } from "@/types/artist";
+import { getArtistRatingSummary } from "@/services/reviews/reviews.server";
 
 import styles from "./ArtistCard.module.css";
 
@@ -9,7 +10,9 @@ type ArtistCardProps = {
   artist: Artist;
 };
 
-export default function ArtistCard({ artist }: ArtistCardProps) {
+export default async function ArtistCard({ artist }: ArtistCardProps) {
+  const rating = await getArtistRatingSummary(artist.id);
+
   return (
     <article className={styles.card}>
       <Link
@@ -47,9 +50,35 @@ export default function ArtistCard({ artist }: ArtistCardProps) {
             <p className={styles.role}>{artist.specialty} artist</p>
           </div>
 
-          <span className={styles.number}>
-            {String(artist.id).padStart(2, "0")}
-          </span>
+          <Link
+            className={styles.rating}
+            href={`/artists/${artist.slug}#reviews`}
+            aria-label={
+              rating.count > 0
+                ? `${artist.name} has a rating of ${rating.average.toFixed(
+                    1,
+                  )} from ${rating.count} reviews`
+                : `View reviews for ${artist.name}`
+            }
+          >
+            {rating.count > 0 ? (
+              <>
+                <span>{rating.average.toFixed(1)}</span>
+
+                <span className={styles.ratingStar} aria-hidden="true">
+                  ★
+                </span>
+              </>
+            ) : (
+              <>
+                <span>New</span>
+
+                <span className={styles.ratingStar} aria-hidden="true">
+                  ★
+                </span>
+              </>
+            )}
+          </Link>
         </div>
 
         {artist.description && (

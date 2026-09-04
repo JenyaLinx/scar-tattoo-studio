@@ -3,7 +3,9 @@
   top: 0;
   z-index: 1000;
 
-  width: 100%;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+
   padding: 10px 20px;
 
   background-color: var(--color-surface);

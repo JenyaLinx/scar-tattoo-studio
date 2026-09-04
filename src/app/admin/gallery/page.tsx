@@ -6,6 +6,8 @@ import Header from "@/components/Header/Header";
 import { requireAdmin } from "@/services/auth/admin.server";
 import { getGalleryImages } from "@/services/gallery/gallery.server";
 
+import { deleteGalleryImage } from "./actions";
+
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -104,15 +106,23 @@ export default async function AdminGalleryPage() {
                     </div>
                   </div>
 
-                  {image.artist && (
-                    <Link
-                      className={styles.artistLink}
-                      href={`/admin/artists/${image.artist.id}`}
-                    >
-                      Manage artist
-                      <span aria-hidden="true">→</span>
-                    </Link>
-                  )}
+                  <div className={styles.actions}>
+                    {image.artist && (
+                      <Link
+                        className={styles.artistLink}
+                        href={`/admin/artists/${image.artist.id}`}
+                      >
+                        Manage artist
+                        <span aria-hidden="true">→</span>
+                      </Link>
+                    )}
+
+                    <form action={deleteGalleryImage.bind(null, image.id)}>
+                      <button className={styles.deleteButton} type="submit">
+                        Delete image
+                      </button>
+                    </form>
+                  </div>
                 </article>
               ))}
             </div>

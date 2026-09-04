@@ -95,8 +95,17 @@
 
 .publicLink:hover,
 .artistLink:hover {
-  gap: 18px;
   color: var(--color-accent);
+}
+
+.artistLink span,
+.publicLink span {
+  transition: transform var(--transition-fast);
+}
+
+.artistLink:hover span,
+.publicLink:hover span {
+  transform: translateX(4px);
 }
 
 .grid {
@@ -225,6 +234,47 @@
 
   color: var(--color-text-secondary);
   font-size: 11px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-top: 18px;
+}
+
+.artistLink {
+  margin-top: 0;
+}
+
+.deleteButton {
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  color: var(--color-text-secondary);
+
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition: color var(--transition-fast);
+}
+
+.deleteButton:hover {
+  color: #b74b4b;
+}
+
+.deleteButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
 }
 
 @media screen and (min-width: 480px) {

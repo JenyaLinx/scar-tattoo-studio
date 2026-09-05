@@ -1,5 +1,3 @@
-import { createClient } from "@/lib/supabase/client";
-
 type CreateBookingData = {
   artistId: number;
   bookingDate: string;
@@ -15,34 +13,27 @@ export async function createBooking({
   phone,
   message,
 }: CreateBookingData) {
-  const supabase = createClient();
+  const response = await fetch("/api/bookings", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      artistId,
+      bookingDate,
+      bookingTime,
+      phone,
+      message,
+    }),
+  });
 
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+  const data = await response.json();
 
-  if (userError || !user) {
-    throw new Error("You must be signed in to book a consultation.");
+  if (!response.ok) {
+    throw new Error(
+      data.message || "Unable to create booking.",
+    );
   }
 
-  const { data, error } = await supabase
-    .from("bookings")
-    .insert({
-      user_id: user.id,
-      artist_id: artistId,
-      booking_date: bookingDate,
-      booking_time: bookingTime,
-      phone: phone.trim(),
-      message: message?.trim() || null,
-      status: "pending",
-    })
-    .select()
-    .single();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
+  return data.booking;
 }

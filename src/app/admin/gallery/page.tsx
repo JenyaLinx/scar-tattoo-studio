@@ -2,14 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import AdminGalleryDeleteButton from "@/components/AdminGalleryDeleteButton/AdminGalleryDeleteButton";
 import AdminGalleryUpload from "@/components/AdminGalleryUpload/AdminGalleryUpload";
 import Header from "@/components/Header/Header";
 
 import { getAllArtistsForAdmin } from "@/services/artists/artists.server";
 import { requireAdmin } from "@/services/auth/admin.server";
 import { getGalleryImages } from "@/services/gallery/gallery.server";
-
-import { deleteGalleryImage } from "./actions";
 
 import styles from "./page.module.css";
 
@@ -138,11 +137,7 @@ export default async function AdminGalleryPage() {
                       </Link>
                     )}
 
-                    <form action={deleteGalleryImage.bind(null, image.id)}>
-                      <button className={styles.deleteButton} type="submit">
-                        Delete image
-                      </button>
-                    </form>
+                    <AdminGalleryDeleteButton imageId={image.id} />
                   </div>
                 </article>
               ))}

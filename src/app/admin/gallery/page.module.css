@@ -249,33 +249,6 @@
   margin-top: 0;
 }
 
-.deleteButton {
-  padding: 0;
-
-  border: 0;
-  background: transparent;
-
-  color: var(--color-text-secondary);
-
-  font-family: inherit;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-
-  cursor: pointer;
-
-  transition: color var(--transition-fast);
-}
-
-.deleteButton:hover {
-  color: #b74b4b;
-}
-
-.deleteButton:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 4px;
-}
 
 @media screen and (min-width: 480px) {
   .page {

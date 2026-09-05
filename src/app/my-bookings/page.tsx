@@ -22,12 +22,16 @@ type MyBookingsPageProps = {
   }>;
 };
 
-type ClientBookingFilter = "upcoming" | "past" | "cancelled";
+type ClientBookingFilter = "all" | "upcoming" | "past" | "cancelled";
 
 const filters: {
   label: string;
   value: ClientBookingFilter;
 }[] = [
+  {
+    label: "All",
+    value: "all",
+  },
   {
     label: "Upcoming",
     value: "upcoming",
@@ -62,18 +66,22 @@ export default async function MyBookingsPage({
   const requestedFilter =
     typeof resolvedSearchParams.filter === "string"
       ? resolvedSearchParams.filter
-      : "upcoming";
+      : "all";
 
   const activeFilter: ClientBookingFilter = filters.some(
     (filter) => filter.value === requestedFilter,
   )
     ? (requestedFilter as ClientBookingFilter)
-    : "upcoming";
+    : "all";
 
   const bookings = await getCurrentUserBookings();
 
   const filteredBookings = bookings.filter((booking) => {
     const isPast = isBookingPast(booking.booking_date, booking.booking_time);
+
+    if (activeFilter === "all") {
+      return true;
+    }
 
     if (activeFilter === "cancelled") {
       return booking.status === "cancelled";
@@ -127,7 +135,7 @@ export default async function MyBookingsPage({
                       activeFilter === filter.value ? styles.filterActive : ""
                     }`}
                     href={
-                      filter.value === "upcoming"
+                      filter.value === "all"
                         ? "/my-bookings"
                         : `/my-bookings?filter=${filter.value}`
                     }

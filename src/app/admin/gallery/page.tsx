@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import AdminGalleryUpload from "@/components/AdminGalleryUpload/AdminGalleryUpload";
 import Header from "@/components/Header/Header";
+
+import { getAllArtistsForAdmin } from "@/services/artists/artists.server";
 import { requireAdmin } from "@/services/auth/admin.server";
 import { getGalleryImages } from "@/services/gallery/gallery.server";
 
@@ -17,7 +20,10 @@ export const metadata: Metadata = {
 export default async function AdminGalleryPage() {
   await requireAdmin();
 
-  const images = await getGalleryImages();
+  const [images, artists] = await Promise.all([
+    getGalleryImages(),
+    getAllArtistsForAdmin(),
+  ]);
 
   return (
     <main className={styles.page}>
@@ -33,12 +39,20 @@ export default async function AdminGalleryPage() {
           </h1>
 
           <p className={styles.description}>
-            Review gallery images and manage portfolio content shown on the
-            public website.
+            Upload new artwork, review gallery images and manage portfolio
+            content shown on the public website.
           </p>
         </div>
 
         <div className={styles.content}>
+          <AdminGalleryUpload
+            artists={artists.map((artist) => ({
+              id: artist.id,
+              name: artist.name,
+              specialty: artist.specialty,
+            }))}
+          />
+
           <div className={styles.topBar}>
             <div>
               <p className={styles.countLabel}>Gallery images</p>
@@ -60,7 +74,10 @@ export default async function AdminGalleryPage() {
 
               <h2>No gallery images yet.</h2>
 
-              <p>Images added to artist portfolios will appear here.</p>
+              <p>
+                Upload artwork above to add it to the gallery and the selected
+                artist&apos;s portfolio.
+              </p>
             </div>
           ) : (
             <div className={styles.grid}>
@@ -76,7 +93,11 @@ export default async function AdminGalleryPage() {
                           : "Tattoo work at SCAR Tattoo Studio"
                       }
                       fill
-                      sizes="(max-width: 767px) 100vw, 33vw"
+                      sizes="
+                          (max-width: 767px) 100vw,
+                          (max-width: 1199px) 50vw,
+                          33vw
+                        "
                     />
 
                     <span className={styles.imageNumber}>

@@ -5,6 +5,61 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/services/auth/admin.server";
 
+type CreateGalleryImageInput = {
+  artistId: number;
+  imageUrl: string;
+  storagePath: string;
+};
+
+export async function createGalleryImage({
+  artistId,
+  imageUrl,
+  storagePath,
+}: CreateGalleryImageInput) {
+  await requireAdmin();
+
+  const supabase = await createClient();
+
+  const { data: latestImage, error: positionError } =
+    await supabase
+      .from("artist_images")
+      .select("position")
+      .eq("artist_id", artistId)
+      .order("position", {
+        ascending: false,
+      })
+      .limit(1)
+      .maybeSingle();
+
+  if (positionError) {
+    throw new Error(
+      `Failed to calculate image position: ${positionError.message}`,
+    );
+  }
+
+  const nextPosition =
+    (latestImage?.position ?? 0) + 1;
+
+  const { error } = await supabase
+    .from("artist_images")
+    .insert({
+      artist_id: artistId,
+      image_url: imageUrl,
+      storage_path: storagePath,
+      position: nextPosition,
+    });
+
+  if (error) {
+    throw new Error(
+      `Failed to create gallery image: ${error.message}`,
+    );
+  }
+
+  revalidatePath("/admin/gallery");
+  revalidatePath("/gallery");
+  revalidatePath("/artists");
+}
+
 export async function deleteGalleryImage(
   imageId: number,
 ) {
@@ -17,7 +72,7 @@ export async function deleteGalleryImage(
       .from("artist_images")
       .select(`
         id,
-        artist_id,
+        storage_path,
         artist:artists (
           slug
         )
@@ -35,20 +90,31 @@ export async function deleteGalleryImage(
     throw new Error("Gallery image not found.");
   }
 
-  const { error } = await supabase
-    .from("artist_images")
-    .delete()
-    .eq("id", imageId);
+  const { error: deleteError } =
+    await supabase
+      .from("artist_images")
+      .delete()
+      .eq("id", imageId);
 
-  if (error) {
+  if (deleteError) {
     throw new Error(
-      `Failed to delete gallery image: ${error.message}`,
+      `Failed to delete gallery image: ${deleteError.message}`,
     );
   }
 
-  revalidatePath("/admin/gallery");
-  revalidatePath("/gallery");
-  revalidatePath("/artists");
+  if (image.storage_path) {
+    const { error: storageError } =
+      await supabase.storage
+        .from("artist-images")
+        .remove([image.storage_path]);
+
+    if (storageError) {
+      console.error(
+        "Unable to delete image from storage:",
+        storageError,
+      );
+    }
+  }
 
   const artistRelation = image.artist;
 
@@ -56,7 +122,13 @@ export async function deleteGalleryImage(
     ? artistRelation[0]
     : artistRelation;
 
+  revalidatePath("/admin/gallery");
+  revalidatePath("/gallery");
+  revalidatePath("/artists");
+
   if (artist?.slug) {
-    revalidatePath(`/artists/${artist.slug}`);
+    revalidatePath(
+      `/artists/${artist.slug}`,
+    );
   }
 }

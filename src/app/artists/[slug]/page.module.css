@@ -460,3 +460,36 @@
 .reviewLoginLink:hover {
   color: var(--color-accent);
 }
+
+@media screen and (min-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .galleryItem {
+    min-height: 520px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .portfolio {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .galleryItem {
+    min-height: 560px;
+    aspect-ratio: 4 / 5;
+  }
+
+  .galleryImage {
+    object-fit: cover;
+    object-position: center;
+  }
+}

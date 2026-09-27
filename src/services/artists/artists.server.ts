@@ -1,59 +1,86 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Artist, ArtistWithImages } from "@/types/artist";
 
+function isNextDynamicServerError(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "digest" in error &&
+    error.digest === "DYNAMIC_SERVER_USAGE"
+  );
+}
+
 export async function getArtists(): Promise<Artist[]> {
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from("artists")
-    .select("*")
-    .eq("is_active", true)
-    .order("id", {
-      ascending: true,
-    });
+    const { data, error } = await supabase
+      .from("artists")
+      .select("*")
+      .eq("is_active", true)
+      .order("id", {
+        ascending: true,
+      });
 
-  if (error) {
-    throw new Error(`Failed to fetch artists: ${error.message}`);
+    if (error) {
+      console.error("Failed to fetch artists:", error.message);
+      return [];
+    }
+
+    return data ?? [];
+  } catch (error) {
+    if (isNextDynamicServerError(error)) {
+      throw error;
+    }
+
+    console.error("Unable to connect to Supabase for artists:", error);
+    return [];
   }
-
-  return data ?? [];
 }
 
 export async function getArtistBySlug(
   slug: string,
 ): Promise<ArtistWithImages | null> {
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from("artists")
-    .select(`
-      *,
-      artist_images (
-        id,
-        artist_id,
-        image_url,
-        position,
-        created_at
-      )
-    `)
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .order("position", {
-      referencedTable: "artist_images",
-      ascending: true,
-    })
-    .maybeSingle();
+    const { data, error } = await supabase
+      .from("artists")
+      .select(`
+        *,
+        artist_images (
+          id,
+          artist_id,
+          image_url,
+          position,
+          created_at
+        )
+      `)
+      .eq("slug", slug)
+      .eq("is_active", true)
+      .order("position", {
+        referencedTable: "artist_images",
+        ascending: true,
+      })
+      .maybeSingle();
 
-  if (error) {
-    throw new Error(`Failed to fetch artist: ${error.message}`);
+    if (error) {
+      console.error("Failed to fetch artist:", error.message);
+      return null;
+    }
+
+    return data as ArtistWithImages | null;
+  } catch (error) {
+    if (isNextDynamicServerError(error)) {
+      throw error;
+    }
+
+    console.error("Unable to connect to Supabase for artist:", error);
+    return null;
   }
-
-  return data as ArtistWithImages | null;
 }
 
-export async function getAllArtistsForAdmin(): Promise<
-  Artist[]
-> {
+export async function getAllArtistsForAdmin(): Promise<Artist[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
